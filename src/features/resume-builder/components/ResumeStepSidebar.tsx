@@ -61,7 +61,7 @@ export const ResumeStepSidebar = ({
   const orderedSteps: ResumeStepId[] = ['basic', ...sectionOrder]
 
   return (
-    <aside>
+    <aside className="lg:sticky lg:top-2 lg:h-fit">
       <Card className="p-3 sm:p-4">
         <h2 className="mb-3 text-sm font-semibold uppercase tracking-[0.12em] text-slate">
           编辑步骤

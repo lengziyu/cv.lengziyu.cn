@@ -191,7 +191,7 @@ export const ResumePreviewPanel = ({
           {importMessage ? <p className="mt-2 text-xs text-slate">{importMessage}</p> : null}
         </div>
 
-        <div className="rounded-xl bg-paper-soft p-1.5 sm:p-2">
+        <div className="rounded-xl border border-line bg-paper-soft p-1.5 sm:p-2">
           <div
             className="mx-auto w-full max-w-[980px] overflow-hidden rounded-xl border border-line bg-white shadow-panel"
             style={{ height: PREVIEW_PAGE_HEIGHT }}
