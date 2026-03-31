@@ -9,8 +9,8 @@ import type { ReactNode } from 'react'
 import type { ResumeTemplateProps } from '../types/template'
 
 const ContactPill = ({ text }: { text: string }) => (
-  <span className="pdf-pill inline-grid min-h-[28px] place-items-center whitespace-nowrap rounded-full border border-line px-3 py-1 text-xs leading-none align-middle">
-    <span className="pdf-pill-text">{text}</span>
+  <span className="pdf-pill pdf-pill-contact rounded-full border border-line">
+    <span className="pdf-pill-label">{text}</span>
   </span>
 )
 
@@ -24,11 +24,11 @@ const TagPill = ({
   <span
     className={
       compact
-        ? 'pdf-pill inline-grid min-h-[22px] place-items-center rounded-md border border-line bg-paper-soft px-2 py-0.5 text-xs leading-none text-slate align-middle'
-        : 'pdf-pill inline-grid min-h-[26px] place-items-center rounded-md border border-line bg-paper-soft px-2.5 py-1 text-xs font-medium leading-none text-ink align-middle'
+        ? 'pdf-pill pdf-pill-tag-compact rounded-md border border-line bg-paper-soft text-slate'
+        : 'pdf-pill pdf-pill-tag rounded-md border border-line bg-paper-soft text-ink'
     }
   >
-    <span className="pdf-pill-text">{text}</span>
+    <span className="pdf-pill-label">{text}</span>
   </span>
 )
 
@@ -124,7 +124,7 @@ const ProjectSection = ({
             </p>
           </div>
 
-          <div className="mt-2 flex flex-wrap gap-2">
+          <div className="mt-3 flex flex-wrap gap-2">
             {(item.techStack || '请填写技术栈')
               .split(',')
               .map((tech) => tech.trim())
@@ -252,7 +252,7 @@ export const NotionLinearTemplate = ({ data, density = 1 }: ResumeTemplateProps)
           <div className="min-w-0 flex-1">
             <h1 className="text-3xl font-semibold tracking-[-0.02em] text-ink">{basic.fullName}</h1>
             <p className="mt-1 text-base font-medium text-slate">{basic.role}</p>
-            <div className="mt-3 flex flex-wrap gap-2 text-xs text-slate">
+            <div className="mt-4 flex flex-wrap gap-2 text-xs text-slate">
               <ContactPill text={basic.email} />
               <ContactPill text={basic.phone} />
               <ContactPill text={basic.location} />
@@ -261,22 +261,18 @@ export const NotionLinearTemplate = ({ data, density = 1 }: ResumeTemplateProps)
             <p className="mt-3 text-sm leading-6 text-slate">{basic.summary}</p>
           </div>
 
-          <div
-            className="overflow-hidden rounded-lg border border-line bg-paper-soft"
-            style={{
-              height: `${128 * d}px`,
-              width: `${96 * d}px`,
-              minWidth: `${96 * d}px`,
-            }}
-          >
-            {basic.avatar ? (
+          {basic.avatar ? (
+            <div
+              className="overflow-hidden rounded-lg border border-line bg-paper-soft"
+              style={{
+                height: `${128 * d}px`,
+                width: `${96 * d}px`,
+                minWidth: `${96 * d}px`,
+              }}
+            >
               <img src={basic.avatar} alt="简历头像" className="h-full w-full object-cover" />
-            ) : (
-              <div className="flex h-full w-full items-center justify-center text-xs text-slate">
-                照片（可选）
-              </div>
-            )}
-          </div>
+            </div>
+          ) : null}
         </div>
       </header>
 

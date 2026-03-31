@@ -14,12 +14,13 @@ const SectionTitle = ({ children }: { children: ReactNode }) => (
   </h2>
 )
 
-export const ModernSlateTemplate = ({ data }: ResumeTemplateProps) => {
+export const ModernSlateTemplate = ({ data, density = 1 }: ResumeTemplateProps) => {
   const { basic, experiences, projects, education, skills, sectionOrder } = data
+  const d = Math.max(0.9, Math.min(1.14, density))
 
   const sections: Record<ResumeSectionId, ReactNode> = {
     experience: (
-      <section className="mt-6 rounded-xl border border-slate-200/80 bg-white p-4">
+      <section className="rounded-xl border border-slate-200/80 bg-white" style={{ marginTop: `${20 * d}px`, padding: `${14 * d}px` }}>
         <SectionTitle>{data.sectionTitles.experience}</SectionTitle>
         <div className="mt-3 space-y-4">
           {experiences.map((item) => (
@@ -44,7 +45,7 @@ export const ModernSlateTemplate = ({ data }: ResumeTemplateProps) => {
       </section>
     ),
     project: (
-      <section className="mt-6 rounded-xl border border-slate-200/80 bg-white p-4">
+      <section className="rounded-xl border border-slate-200/80 bg-white" style={{ marginTop: `${20 * d}px`, padding: `${14 * d}px` }}>
         <SectionTitle>{data.sectionTitles.project}</SectionTitle>
         <div className="mt-3 space-y-4">
           {projects.map((item) => (
@@ -64,7 +65,7 @@ export const ModernSlateTemplate = ({ data }: ResumeTemplateProps) => {
       </section>
     ),
     education: (
-      <section className="mt-6 rounded-xl border border-slate-200/80 bg-white p-4">
+      <section className="rounded-xl border border-slate-200/80 bg-white" style={{ marginTop: `${20 * d}px`, padding: `${14 * d}px` }}>
         <SectionTitle>{data.sectionTitles.education}</SectionTitle>
         <div className="mt-3 space-y-3">
           {education.map((item) => (
@@ -80,7 +81,7 @@ export const ModernSlateTemplate = ({ data }: ResumeTemplateProps) => {
       </section>
     ),
     skills: (
-      <section className="mt-6 rounded-xl border border-slate-200/80 bg-white p-4">
+      <section className="rounded-xl border border-slate-200/80 bg-white" style={{ marginTop: `${20 * d}px`, padding: `${14 * d}px` }}>
         <SectionTitle>{data.sectionTitles.skills}</SectionTitle>
         <div className="mt-3 flex flex-wrap gap-2">
           {skills.map((skill) => (
@@ -94,24 +95,41 @@ export const ModernSlateTemplate = ({ data }: ResumeTemplateProps) => {
   }
 
   return (
-    <article className="mx-auto w-full max-w-[920px] rounded-2xl border border-slate-200 bg-gradient-to-b from-slate-50 to-white p-6 sm:p-9">
-      <header className="rounded-xl bg-slate-900 px-5 py-5 text-white">
+    <article className="mx-auto w-full max-w-[920px] rounded-2xl border border-slate-200 bg-gradient-to-b from-slate-50 to-white" style={{ padding: `${26 * d}px` }}>
+      <header
+        className="rounded-xl px-5 py-5"
+        style={{
+          backgroundColor: '#0f172a',
+          color: '#ffffff',
+          WebkitPrintColorAdjust: 'exact',
+          printColorAdjust: 'exact',
+        }}
+      >
         <div className="flex items-start justify-between gap-5">
           <div>
-            <h1 className="text-3xl font-semibold">{basic.fullName}</h1>
-            <p className="mt-1 text-slate-200">{basic.role}</p>
-            <p className="mt-3 text-sm text-slate-300">
-              {[basic.email, basic.phone, basic.location].filter(Boolean).join(' · ')}
+            <h1 className="text-3xl font-semibold">{basic.fullName || '姓名'}</h1>
+            <p className="mt-1" style={{ color: 'rgba(226, 232, 240, 0.95)' }}>
+              {basic.role || '职位'}
             </p>
-            <p className="mt-1 text-sm text-slate-300">{basic.website}</p>
+            <p className="mt-3 text-sm" style={{ color: 'rgba(203, 213, 225, 0.95)' }}>
+              {[basic.email, basic.phone, basic.location]
+                .filter(Boolean)
+                .join(' · ') || '邮箱 · 电话 · 城市'}
+            </p>
+            <p className="mt-1 text-sm" style={{ color: 'rgba(203, 213, 225, 0.95)' }}>
+              {basic.website || '个人网站'}
+            </p>
           </div>
-          <div className="h-28 w-24 overflow-hidden rounded-md border border-white/20 bg-white/10">
-            {basic.avatar ? (
+
+          {basic.avatar ? (
+            <div className="h-28 w-24 overflow-hidden rounded-md border border-white/20 bg-white/10">
               <img src={basic.avatar} alt="简历头像" className="h-full w-full object-cover" />
-            ) : null}
-          </div>
+            </div>
+          ) : null}
         </div>
-        <p className="mt-4 text-sm leading-6 text-slate-200">{basic.summary}</p>
+        <p className="mt-4 text-sm leading-6" style={{ color: 'rgba(226, 232, 240, 0.95)' }}>
+          {basic.summary || '请补充个人简介，突出你的核心竞争力和代表性成果。'}
+        </p>
       </header>
 
       {sectionOrder.map((id) => (

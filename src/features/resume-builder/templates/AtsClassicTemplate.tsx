@@ -122,15 +122,11 @@ export const AtsClassicTemplate = ({ data }: ResumeTemplateProps) => {
                 .join(' | ')}
             </p>
           </div>
-          <div className="h-36 w-28 overflow-hidden border border-neutral-400 bg-neutral-50">
-            {basic.avatar ? (
+          {basic.avatar ? (
+            <div className="h-36 w-28 overflow-hidden border border-neutral-400 bg-neutral-50">
               <img src={basic.avatar} alt="简历头像" className="h-full w-full object-cover" />
-            ) : (
-              <div className="flex h-full w-full items-center justify-center text-xs text-neutral-500">
-                Photo
-              </div>
-            )}
-          </div>
+            </div>
+          ) : null}
         </div>
       </header>
 

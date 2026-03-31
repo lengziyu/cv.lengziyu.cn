@@ -17,7 +17,28 @@ interface ResumeStepSidebarProps {
 }
 
 const itemBaseClass =
-  'w-full rounded-lg border px-3 py-3 text-left transition lg:min-w-0'
+  'relative w-full rounded-lg border px-3 py-3 text-left transition lg:min-w-0'
+
+const DragHandleIcon = ({ selected }: { selected: boolean }) => (
+  <span
+    className={cn(
+      'absolute right-3 top-3 inline-flex h-5 w-5 items-center justify-center rounded-md border',
+      selected
+        ? 'border-white/15 bg-white/10 text-white/75'
+        : 'border-slate-200 bg-slate-50 text-slate-400',
+    )}
+    aria-hidden="true"
+  >
+    <svg viewBox="0 0 16 16" className="h-3.5 w-3.5 fill-current">
+      <circle cx="5" cy="4" r="1.1" />
+      <circle cx="11" cy="4" r="1.1" />
+      <circle cx="5" cy="8" r="1.1" />
+      <circle cx="11" cy="8" r="1.1" />
+      <circle cx="5" cy="12" r="1.1" />
+      <circle cx="11" cy="12" r="1.1" />
+    </svg>
+  </span>
+)
 
 export const ResumeStepSidebar = ({
   activeStep,
@@ -76,13 +97,14 @@ export const ResumeStepSidebar = ({
                 className={cn(
                   itemBaseClass,
                   selected
-                    ? 'border-ink bg-ink text-white shadow-sm'
-                    : 'border-line bg-white text-ink hover:bg-paper-soft',
+                    ? 'border-ink bg-ink pr-12 text-white shadow-sm'
+                    : 'border-line bg-white pr-12 text-ink hover:bg-paper-soft',
                   draggingId === stepId ? 'ring-2 ring-slate-300' : '',
                 )}
                 onClick={() => onStepChange(stepId)}
                 title={isDraggable ? '可拖拽排序' : '基础信息固定在首位'}
               >
+                {isDraggable ? <DragHandleIcon selected={selected} /> : null}
                 <p
                   className={cn(
                     'text-[11px] font-semibold uppercase tracking-[0.12em]',

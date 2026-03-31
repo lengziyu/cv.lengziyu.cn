@@ -63,8 +63,8 @@ function App() {
     <div className="min-h-screen pb-8">
       <header className="mx-auto w-full max-w-[1880px] px-1.5 pt-1.5 sm:px-2 lg:px-3">
         <div className="rounded-xl border border-line bg-white/90 px-3 py-[17px] backdrop-blur">
-          <div className="flex items-center gap-2">
-            <img src="/brand-logo.svg" alt="Resume Builder Logo" className="h-7 w-7" />
+          <div className="flex items-center gap-3">
+            <img src="/brand-logo.svg" alt="Resume Builder Logo" className="h-11 w-11 shrink-0" />
             <div>
               <p className="text-[10px] font-semibold uppercase tracking-[0.14em] text-slate">
                 Resume Builder

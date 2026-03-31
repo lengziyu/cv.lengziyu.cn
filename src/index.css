@@ -31,13 +31,37 @@ body {
 }
 
 .pdf-pill {
-  line-height: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  vertical-align: middle;
+  white-space: nowrap;
+  box-sizing: border-box;
+  position: relative;
+  top: 1px;
 }
 
-.pdf-pill-text {
+.pdf-pill-contact {
+  min-height: 28px;
+  padding: 0 22px;
+}
+
+.pdf-pill-tag {
+  min-height: 26px;
+  padding: 0 10px;
+  font-weight: 500;
+}
+
+.pdf-pill-tag-compact {
+  min-height: 22px;
+  padding: 0 10px;
+}
+
+.pdf-pill-label {
   display: block;
-  line-height: 1;
-  transform: translateY(-0.5px);
+  font-size: 12px;
+  line-height: 12px;
+  transform: translateY(-1.5px);
 }
 
 @media print {

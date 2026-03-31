@@ -25,15 +25,33 @@ export const exportResumePdf = async (
         const style = doc.createElement('style')
         style.textContent = `
           .pdf-pill {
-            display: inline-grid !important;
-            place-items: center !important;
-            line-height: 1 !important;
+            display: inline-flex !important;
+            align-items: center !important;
+            justify-content: center !important;
             vertical-align: middle !important;
+            white-space: nowrap !important;
+            box-sizing: border-box !important;
+            position: relative !important;
+            top: 1px !important;
           }
-          .pdf-pill-text {
+          .pdf-pill-contact {
+            min-height: 28px !important;
+            padding: 0 22px !important;
+          }
+          .pdf-pill-tag {
+            min-height: 26px !important;
+            padding: 0 10px !important;
+            font-weight: 500 !important;
+          }
+          .pdf-pill-tag-compact {
+            min-height: 22px !important;
+            padding: 0 10px !important;
+          }
+          .pdf-pill-label {
             display: block !important;
-            line-height: 1 !important;
-            transform: translateY(-1px) !important;
+            font-size: 12px !important;
+            line-height: 12px !important;
+            transform: translateY(-2.5px) !important;
           }
         `
         doc.head.appendChild(style)

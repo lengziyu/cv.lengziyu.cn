@@ -95,15 +95,11 @@ export const CleanColumnsTemplate = ({ data }: ResumeTemplateProps) => {
             </p>
             <p className="mt-1 text-sm text-slate-500">{basic.website}</p>
           </div>
-          <div className="h-28 w-24 overflow-hidden rounded-md border border-slate-200 bg-slate-50">
-            {basic.avatar ? (
+          {basic.avatar ? (
+            <div className="h-28 w-24 overflow-hidden rounded-md border border-slate-200 bg-slate-50">
               <img src={basic.avatar} alt="简历头像" className="h-full w-full object-cover" />
-            ) : (
-              <div className="flex h-full w-full items-center justify-center text-xs text-slate-400">
-                可选照片
-              </div>
-            )}
-          </div>
+            </div>
+          ) : null}
         </div>
         <p className="mt-4 text-sm leading-6 text-slate-700">{basic.summary}</p>
       </header>
