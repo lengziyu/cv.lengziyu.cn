@@ -54,6 +54,9 @@ export type ResumeAction =
       sourceId: ResumeSectionId
       targetId: ResumeSectionId
     }
+  | { type: 'custom/toggle'; enabled: boolean }
+  | { type: 'custom/title-set'; title: string }
+  | { type: 'custom/content-set'; content: string }
   | { type: 'data/replace'; data: ResumeData }
 
 export const resumeReducer = (
@@ -182,6 +185,33 @@ export const resumeReducer = (
         sectionOrder: next,
       }
     }
+
+    case 'custom/toggle':
+      return {
+        ...state,
+        custom: {
+          ...state.custom,
+          enabled: action.enabled,
+        },
+      }
+
+    case 'custom/title-set':
+      return {
+        ...state,
+        custom: {
+          ...state.custom,
+          title: action.title,
+        },
+      }
+
+    case 'custom/content-set':
+      return {
+        ...state,
+        custom: {
+          ...state.custom,
+          content: action.content,
+        },
+      }
 
     case 'data/replace':
       return action.data

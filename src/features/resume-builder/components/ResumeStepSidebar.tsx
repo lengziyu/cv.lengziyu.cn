@@ -12,12 +12,18 @@ interface ResumeStepSidebarProps {
   activeStep: ResumeStepId
   sectionOrder: ResumeSectionId[]
   sectionTitles: ResumeSectionTitles
+  customEnabled: boolean
+  customTitle: string
   onStepChange: (step: ResumeStepId) => void
   onSectionMove: (sourceId: ResumeSectionId, targetId: ResumeSectionId) => void
+  onCustomToggle: (enabled: boolean) => void
 }
 
 const itemBaseClass =
   'relative w-full rounded-lg border px-3 py-3 text-left transition lg:min-w-0'
+
+const isReorderableStep = (stepId: ResumeStepId): stepId is ResumeSectionId =>
+  stepId !== 'basic' && stepId !== 'custom'
 
 const DragHandleIcon = ({ selected }: { selected: boolean }) => (
   <span
@@ -44,8 +50,11 @@ export const ResumeStepSidebar = ({
   activeStep,
   sectionOrder,
   sectionTitles,
+  customEnabled,
+  customTitle,
   onStepChange,
   onSectionMove,
+  onCustomToggle,
 }: ResumeStepSidebarProps) => {
   const [draggingId, setDraggingId] = useState<ResumeSectionId | null>(null)
 
@@ -58,23 +67,33 @@ export const ResumeStepSidebar = ({
     [],
   )
 
-  const orderedSteps: ResumeStepId[] = ['basic', ...sectionOrder]
+  const orderedSteps: ResumeStepId[] = customEnabled
+    ? ['basic', ...sectionOrder, 'custom']
+    : ['basic', ...sectionOrder]
 
   return (
-    <aside className="lg:sticky lg:top-2 lg:h-fit">
-      <Card className="p-3 sm:p-4">
-        <h2 className="mb-3 text-sm font-semibold uppercase tracking-[0.12em] text-slate">
-          编辑步骤
-        </h2>
-        <p className="mb-3 text-xs text-slate">拖拽调整模块顺序（基础信息固定）。</p>
+    <aside>
+      <Card className="flex flex-col gap-4 p-3 sm:p-4">
+        <div>
+          <h2 className="mb-3 text-sm font-semibold uppercase tracking-[0.12em] text-slate">
+            编辑步骤
+          </h2>
+          <p className="mb-3 text-xs text-slate">
+            拖拽可调整模块顺序，基础信息固定在顶部，自定义模块固定在最底部。
+          </p>
+        </div>
 
         <div className="space-y-2">
           {orderedSteps.map((stepId, index) => {
             const item = stepMetaMap[stepId]
             const selected = stepId === activeStep
-            const isDraggable = stepId !== 'basic'
+            const isDraggable = isReorderableStep(stepId)
             const displayTitle =
-              stepId === 'basic' ? item.title : sectionTitles[stepId]
+              stepId === 'basic'
+                ? item.title
+                : stepId === 'custom'
+                  ? customTitle || item.title
+                  : sectionTitles[stepId]
 
             return (
               <button
@@ -102,7 +121,13 @@ export const ResumeStepSidebar = ({
                   draggingId === stepId ? 'ring-2 ring-slate-300' : '',
                 )}
                 onClick={() => onStepChange(stepId)}
-                title={isDraggable ? '可拖拽排序' : '基础信息固定在首位'}
+                title={
+                  isDraggable
+                    ? '拖拽可调整顺序'
+                    : stepId === 'custom'
+                      ? '固定显示在最底部'
+                      : '基础信息固定在顶部'
+                }
               >
                 {isDraggable ? <DragHandleIcon selected={selected} /> : null}
                 <p
@@ -125,6 +150,18 @@ export const ResumeStepSidebar = ({
               </button>
             )
           })}
+        </div>
+
+        <div className="mt-auto border-t border-line pt-3">
+          <label className="flex items-center justify-end gap-2 text-xs font-medium text-slate">
+            <span>显示自定义模块</span>
+            <input
+              type="checkbox"
+              checked={customEnabled}
+              onChange={(event) => onCustomToggle(event.target.checked)}
+              className="h-4 w-4 rounded border-line text-ink focus:ring-slate-300"
+            />
+          </label>
         </div>
       </Card>
     </aside>

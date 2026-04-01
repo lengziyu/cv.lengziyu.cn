@@ -63,13 +63,13 @@ const ExperienceSection = ({
   items: ExperienceItem[]
   density: number
 }) => (
-  <section style={{ marginTop: `${16 * density}px` }}>
+  <section className="pdf-page-block" style={{ marginTop: `${16 * density}px` }}>
     <h2 className="text-xs font-semibold uppercase tracking-[0.12em] text-slate">{title}</h2>
     <div className="mt-3 flex flex-col" style={{ gap: `${12 * density}px` }}>
       {items.map((item) => (
         <div
           key={item.id}
-          className="flex flex-col justify-center rounded-xl border border-line"
+          className="pdf-page-block flex flex-col justify-center rounded-xl border border-line"
           style={{
             padding: `${12 * density}px`,
             minHeight: `${Math.max(104, Math.min(168, 120 * density))}px`,
@@ -102,13 +102,13 @@ const ProjectSection = ({
   items: ProjectItem[]
   density: number
 }) => (
-  <section style={{ marginTop: `${16 * density}px` }}>
+  <section className="pdf-page-block" style={{ marginTop: `${16 * density}px` }}>
     <h2 className="text-xs font-semibold uppercase tracking-[0.12em] text-slate">{title}</h2>
     <div className="mt-3 flex flex-col" style={{ gap: `${12 * density}px` }}>
       {items.map((item) => (
         <div
           key={item.id}
-          className="flex flex-col justify-center rounded-xl border border-line"
+          className="pdf-page-block flex flex-col justify-center rounded-xl border border-line"
           style={{
             padding: `${12 * density}px`,
             minHeight: `${Math.max(110, Math.min(210, 146 * density))}px`,
@@ -163,13 +163,13 @@ const EducationSection = ({
   items: EducationItem[]
   density: number
 }) => (
-  <section style={{ marginTop: `${16 * density}px` }}>
+  <section className="pdf-page-block" style={{ marginTop: `${16 * density}px` }}>
     <h2 className="text-xs font-semibold uppercase tracking-[0.12em] text-slate">{title}</h2>
     <div className="mt-3 flex flex-col" style={{ gap: `${12 * density}px` }}>
       {items.map((item) => (
         <div
           key={item.id}
-          className="flex flex-col justify-center rounded-xl border border-line"
+          className="pdf-page-block flex flex-col justify-center rounded-xl border border-line"
           style={{
             padding: `${12 * density}px`,
             minHeight: `${Math.max(96, Math.min(156, 116 * density))}px`,
@@ -202,7 +202,7 @@ const SkillSection = ({
   skills: ResumeData['skills']
   density: number
 }) => (
-  <section style={{ marginTop: `${16 * density}px` }}>
+  <section className="pdf-page-block" style={{ marginTop: `${16 * density}px` }}>
     <h2 className="text-xs font-semibold uppercase tracking-[0.12em] text-slate">{title}</h2>
     <div className="mt-2 flex flex-wrap gap-2">
       {skills.map((skill) => (
@@ -211,6 +211,26 @@ const SkillSection = ({
       {skills.length === 0 ? (
         <span className="text-sm text-slate">请在左侧填写技能关键词。</span>
       ) : null}
+    </div>
+  </section>
+)
+
+const CustomSection = ({
+  title,
+  content,
+  density,
+}: {
+  title: string
+  content: string
+  density: number
+}) => (
+  <section className="pdf-page-block" style={{ marginTop: `${16 * density}px` }}>
+    <h2 className="text-xs font-semibold uppercase tracking-[0.12em] text-slate">{title}</h2>
+    <div
+      className="mt-3 rounded-xl border border-line bg-paper-soft"
+      style={{ padding: `${12 * density}px` }}
+    >
+      {renderLines(content || '请填写自定义模块内容。')}
     </div>
   </section>
 )
@@ -279,6 +299,10 @@ export const NotionLinearTemplate = ({ data, density = 1 }: ResumeTemplateProps)
       {sectionOrder.map((id) => (
         <div key={id}>{sectionRenderer[id]}</div>
       ))}
+
+      {data.custom.enabled ? (
+        <CustomSection title={data.custom.title} content={data.custom.content} density={d} />
+      ) : null}
     </article>
   )
 }

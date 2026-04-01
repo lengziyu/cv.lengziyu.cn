@@ -1,4 +1,4 @@
-import type { ResumeData } from './resume'
+import type { ResumeData, ResumeSectionId, ResumeVersion } from './resume'
 
 export interface ResumeActions {
   updateBasicField: (
@@ -43,10 +43,20 @@ export interface ResumeActions {
   ) => void
   setSkills: (skills: string[]) => void
   setTemplate: (templateId: string) => void
-  updateSectionTitle: (
-    sectionId: 'experience' | 'project' | 'education' | 'skills',
-    title: string,
-  ) => void
-  moveSection: (sourceId: 'experience' | 'project' | 'education' | 'skills', targetId: 'experience' | 'project' | 'education' | 'skills') => void
+  updateSectionTitle: (sectionId: ResumeSectionId, title: string) => void
+  moveSection: (sourceId: ResumeSectionId, targetId: ResumeSectionId) => void
+  toggleCustomSection: (enabled: boolean) => void
+  updateCustomTitle: (title: string) => void
+  updateCustomContent: (content: string) => void
   replaceData: (data: ResumeData) => void
+}
+
+export interface ResumeVersionSummary extends Pick<ResumeVersion, 'id' | 'name' | 'updatedAt'> {}
+
+export interface ResumeVersionActions {
+  switchVersion: (id: string) => void
+  createVersion: () => void
+  duplicateVersion: () => void
+  renameVersion: (name: string) => void
+  deleteVersion: () => void
 }

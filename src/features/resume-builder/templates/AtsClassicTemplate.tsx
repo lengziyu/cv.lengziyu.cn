@@ -13,13 +13,13 @@ export const AtsClassicTemplate = ({ data }: ResumeTemplateProps) => {
 
   const sectionRenderer: Record<ResumeSectionId, ReactNode> = {
     experience: (
-      <section className="mt-5">
+      <section className="pdf-page-block mt-5">
         <h2 className="border-b border-neutral-400 pb-1 text-sm font-bold uppercase tracking-wider">
           {data.sectionTitles.experience}
         </h2>
         <div className="mt-3 space-y-4">
           {experiences.map((item) => (
-            <div key={item.id}>
+            <div key={item.id} className="pdf-page-block">
               <div className="flex flex-wrap items-start justify-between gap-2">
                 <p className="text-sm font-semibold">
                   {item.position || 'Role'} | {item.company || 'Company'}
@@ -41,13 +41,13 @@ export const AtsClassicTemplate = ({ data }: ResumeTemplateProps) => {
       </section>
     ),
     project: (
-      <section className="mt-5">
+      <section className="pdf-page-block mt-5">
         <h2 className="border-b border-neutral-400 pb-1 text-sm font-bold uppercase tracking-wider">
           {data.sectionTitles.project}
         </h2>
         <div className="mt-3 space-y-4">
           {projects.map((item) => (
-            <div key={item.id}>
+            <div key={item.id} className="pdf-page-block">
               <div className="flex flex-wrap items-start justify-between gap-2">
                 <p className="text-sm font-semibold">
                   {item.name || 'Project'} | {item.role || 'Role'}
@@ -78,13 +78,13 @@ export const AtsClassicTemplate = ({ data }: ResumeTemplateProps) => {
       </section>
     ),
     education: (
-      <section className="mt-5">
+      <section className="pdf-page-block mt-5">
         <h2 className="border-b border-neutral-400 pb-1 text-sm font-bold uppercase tracking-wider">
           {data.sectionTitles.education}
         </h2>
         <div className="mt-3 space-y-3">
           {education.map((item) => (
-            <div key={item.id}>
+            <div key={item.id} className="pdf-page-block">
               <div className="flex flex-wrap items-start justify-between gap-2">
                 <p className="text-sm font-semibold">
                   {item.school || 'School'} | {item.degree || 'Degree'}
@@ -100,7 +100,7 @@ export const AtsClassicTemplate = ({ data }: ResumeTemplateProps) => {
       </section>
     ),
     skills: (
-      <section className="mt-5">
+      <section className="pdf-page-block mt-5">
         <h2 className="border-b border-neutral-400 pb-1 text-sm font-bold uppercase tracking-wider">
           {data.sectionTitles.skills}
         </h2>
@@ -130,7 +130,7 @@ export const AtsClassicTemplate = ({ data }: ResumeTemplateProps) => {
         </div>
       </header>
 
-      <section className="mt-5">
+      <section className="pdf-page-block mt-5">
         <h2 className="border-b border-neutral-400 pb-1 text-sm font-bold uppercase tracking-wider">
           Summary
         </h2>
@@ -140,6 +140,17 @@ export const AtsClassicTemplate = ({ data }: ResumeTemplateProps) => {
       {sectionOrder.map((id) => (
         <div key={id}>{sectionRenderer[id]}</div>
       ))}
+
+      {data.custom.enabled ? (
+        <section className="pdf-page-block mt-5">
+          <h2 className="border-b border-neutral-400 pb-1 text-sm font-bold uppercase tracking-wider">
+            {data.custom.title}
+          </h2>
+          <p className="mt-2 whitespace-pre-line text-sm leading-6">
+            {data.custom.content || '请填写自定义模块内容。'}
+          </p>
+        </section>
+      ) : null}
     </article>
   )
 }

@@ -7,13 +7,13 @@ export const CleanColumnsTemplate = ({ data }: ResumeTemplateProps) => {
 
   const sectionRenderer: Record<ResumeSectionId, ReactNode> = {
     experience: (
-      <section>
+      <section className="pdf-page-block">
         <h2 className="text-sm font-semibold uppercase tracking-wider text-sky-700">
           {data.sectionTitles.experience}
         </h2>
         <div className="mt-3 space-y-4">
           {experiences.map((item) => (
-            <div key={item.id} className="rounded-lg border border-sky-100 p-3">
+            <div key={item.id} className="pdf-page-block rounded-lg border border-sky-100 p-3">
               <div className="flex items-start justify-between gap-2">
                 <div>
                   <p className="text-sm font-semibold text-slate-900">{item.position}</p>
@@ -30,13 +30,13 @@ export const CleanColumnsTemplate = ({ data }: ResumeTemplateProps) => {
       </section>
     ),
     project: (
-      <section>
+      <section className="pdf-page-block">
         <h2 className="text-sm font-semibold uppercase tracking-wider text-sky-700">
           {data.sectionTitles.project}
         </h2>
         <div className="mt-3 space-y-4">
           {projects.map((item) => (
-            <div key={item.id} className="rounded-lg border border-sky-100 p-3">
+            <div key={item.id} className="pdf-page-block rounded-lg border border-sky-100 p-3">
               <p className="text-sm font-semibold text-slate-900">{item.name}</p>
               <p className="mt-1 text-xs text-slate-600">{item.role}</p>
               <p className="mt-1 text-xs text-slate-500">
@@ -50,13 +50,13 @@ export const CleanColumnsTemplate = ({ data }: ResumeTemplateProps) => {
       </section>
     ),
     education: (
-      <section>
+      <section className="pdf-page-block">
         <h2 className="text-sm font-semibold uppercase tracking-wider text-sky-700">
           {data.sectionTitles.education}
         </h2>
         <div className="mt-3 space-y-3">
           {education.map((item) => (
-            <div key={item.id} className="rounded-lg border border-sky-100 p-3">
+            <div key={item.id} className="pdf-page-block rounded-lg border border-sky-100 p-3">
               <p className="text-sm font-semibold text-slate-900">{item.school}</p>
               <p className="mt-1 text-xs text-slate-600">{item.degree}</p>
               <p className="mt-1 text-xs text-slate-500">
@@ -68,7 +68,7 @@ export const CleanColumnsTemplate = ({ data }: ResumeTemplateProps) => {
       </section>
     ),
     skills: (
-      <section>
+      <section className="pdf-page-block">
         <h2 className="text-sm font-semibold uppercase tracking-wider text-sky-700">
           {data.sectionTitles.skills}
         </h2>
@@ -108,6 +108,19 @@ export const CleanColumnsTemplate = ({ data }: ResumeTemplateProps) => {
         {sectionOrder.map((id) => (
           <div key={id}>{sectionRenderer[id]}</div>
         ))}
+
+        {data.custom.enabled ? (
+          <section className="pdf-page-block">
+            <h2 className="text-sm font-semibold uppercase tracking-wider text-sky-700">
+              {data.custom.title}
+            </h2>
+            <div className="mt-3 rounded-lg border border-sky-100 p-3">
+              <p className="whitespace-pre-line text-sm leading-6 text-slate-700">
+                {data.custom.content || '请填写自定义模块内容。'}
+              </p>
+            </div>
+          </section>
+        ) : null}
       </div>
     </article>
   )

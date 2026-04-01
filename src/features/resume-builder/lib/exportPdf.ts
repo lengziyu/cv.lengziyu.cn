@@ -16,6 +16,10 @@ export const exportResumePdf = async (
   const options = {
     margin: [5, 5] as [number, number],
     filename: fileName,
+    pagebreak: {
+      mode: ['css', 'legacy'] as ('css' | 'legacy')[],
+      avoid: '.pdf-page-block',
+    },
     image: { type: 'jpeg' as const, quality: 0.98 },
     html2canvas: {
       scale: 2,
@@ -52,6 +56,17 @@ export const exportResumePdf = async (
             font-size: 12px !important;
             line-height: 12px !important;
             transform: translateY(-2.5px) !important;
+          }
+          .pdf-render-scope .pdf-pill {
+            top: -1px !important;
+          }
+          .pdf-render-scope .pdf-pill-label {
+            line-height: 12px !important;
+            transform: translateY(-4px) !important;
+          }
+          .pdf-page-block {
+            break-inside: avoid !important;
+            page-break-inside: avoid !important;
           }
         `
         doc.head.appendChild(style)

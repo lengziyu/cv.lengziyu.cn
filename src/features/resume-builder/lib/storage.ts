@@ -3,6 +3,7 @@ import {
   DEFAULT_SECTION_ORDER,
   DEFAULT_SECTION_TITLES,
   RESUME_STORAGE_KEY,
+  RESUME_WORKSPACE_STORAGE_KEY,
 } from '../constants/resume'
 import { createId } from '../../../shared/createId'
 import type {
@@ -12,6 +13,8 @@ import type {
   ResumeData,
   ResumeSectionId,
   ResumeSectionTitles,
+  ResumeVersion,
+  ResumeWorkspace,
 } from '../types/resume'
 
 const normalizeExperience = (item: Partial<ExperienceItem>): ExperienceItem => ({
@@ -91,26 +94,86 @@ export const normalizeResumeData = (raw?: Partial<ResumeData>): ResumeData => ({
       ? raw.education.map((item) => normalizeEducation(item))
       : DEFAULT_RESUME_DATA.education.map((item) => normalizeEducation(item)),
   skills: raw?.skills?.length ? raw.skills.filter(Boolean) : [...DEFAULT_RESUME_DATA.skills],
+  custom: {
+    enabled: raw?.custom?.enabled ?? DEFAULT_RESUME_DATA.custom.enabled,
+    title: raw?.custom?.title || DEFAULT_RESUME_DATA.custom.title,
+    content: raw?.custom?.content || DEFAULT_RESUME_DATA.custom.content,
+  },
 })
+
+const normalizeResumeVersion = (raw?: Partial<ResumeVersion>, fallbackName = '默认简历'): ResumeVersion => ({
+  id: raw?.id || createId(),
+  name: raw?.name?.trim() || fallbackName,
+  updatedAt: raw?.updatedAt || new Date().toISOString(),
+  data: normalizeResumeData(raw?.data),
+})
+
+const createDefaultWorkspace = (): ResumeWorkspace => {
+  const version = normalizeResumeVersion(
+    {
+      name: '默认简历',
+      data: DEFAULT_RESUME_DATA,
+    },
+    '默认简历',
+  )
+
+  return {
+    activeVersionId: version.id,
+    versions: [version],
+  }
+}
+
+const normalizeWorkspace = (raw?: Partial<ResumeWorkspace>): ResumeWorkspace => {
+  const versions =
+    raw?.versions?.length
+      ? raw.versions.map((item, index) =>
+          normalizeResumeVersion(item, `版本 ${index + 1}`),
+        )
+      : createDefaultWorkspace().versions
+
+  const activeVersionId =
+    raw?.activeVersionId && versions.some((item) => item.id === raw.activeVersionId)
+      ? raw.activeVersionId
+      : versions[0].id
+
+  return {
+    activeVersionId,
+    versions,
+  }
+}
 
 export const parseResumeJson = (jsonText: string): ResumeData => {
   const parsed = JSON.parse(jsonText) as Partial<ResumeData>
   return normalizeResumeData(parsed)
 }
 
-export const loadResumeData = (): ResumeData => {
+export const loadResumeWorkspace = (): ResumeWorkspace => {
   try {
-    const cache = localStorage.getItem(RESUME_STORAGE_KEY)
-    if (!cache) {
-      return normalizeResumeData()
+    const workspaceCache = localStorage.getItem(RESUME_WORKSPACE_STORAGE_KEY)
+    if (workspaceCache) {
+      const parsed = JSON.parse(workspaceCache) as Partial<ResumeWorkspace>
+      return normalizeWorkspace(parsed)
     }
 
-    return parseResumeJson(cache)
+    const legacyCache = localStorage.getItem(RESUME_STORAGE_KEY)
+    if (legacyCache) {
+      const migratedVersion = normalizeResumeVersion({
+        name: '默认简历',
+        data: parseResumeJson(legacyCache),
+      })
+
+      return {
+        activeVersionId: migratedVersion.id,
+        versions: [migratedVersion],
+      }
+    }
+
+    return createDefaultWorkspace()
   } catch {
-    return normalizeResumeData()
+    return createDefaultWorkspace()
   }
 }
 
-export const saveResumeData = (data: ResumeData) => {
-  localStorage.setItem(RESUME_STORAGE_KEY, JSON.stringify(data))
+export const saveResumeWorkspace = (workspace: ResumeWorkspace) => {
+  localStorage.setItem(RESUME_WORKSPACE_STORAGE_KEY, JSON.stringify(workspace))
 }

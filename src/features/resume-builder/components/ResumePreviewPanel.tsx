@@ -1,38 +1,35 @@
-import { useEffect, useRef, useState } from 'react'
-import type { ChangeEvent, RefObject } from 'react'
-import { Button } from '../../../components/ui/Button'
-import { parseResumeJson } from '../lib/storage'
-import type { ResumeActions } from '../types/actions'
+import { useEffect, useRef } from 'react'
+import type { RefObject } from 'react'
 import type { ResumeData } from '../types/resume'
 import { defaultTemplateId, templateRegistry } from '../templates/templateRegistry'
 
 const PREVIEW_PAGE_HEIGHT = 1122
+const TIGHT_FREE_SPACE_THRESHOLD = 24 * 3
+
+export interface ResumePreviewInsight {
+  status: 'fit' | 'tight' | 'overflow'
+  title: string
+  detail: string
+  suggestions: string[]
+}
 
 interface ResumePreviewPanelProps {
   data: ResumeData
-  actions: ResumeActions
   previewRef: RefObject<HTMLDivElement | null>
-  isExporting: boolean
-  isPreviewingPdf: boolean
-  onExport: () => void
-  onPreviewPdf: () => void
+  currentPage: number
+  density: number
+  onTotalPagesChange: (count: number) => void
+  onInsightChange: (insight: ResumePreviewInsight) => void
 }
 
 export const ResumePreviewPanel = ({
   data,
-  actions,
   previewRef,
-  isExporting,
-  isPreviewingPdf,
-  onExport,
-  onPreviewPdf,
+  currentPage,
+  density,
+  onTotalPagesChange,
+  onInsightChange,
 }: ResumePreviewPanelProps) => {
-  const [importMessage, setImportMessage] = useState('')
-  const [currentPage, setCurrentPage] = useState(0)
-  const [totalPages, setTotalPages] = useState(1)
-  const [density, setDensity] = useState(1.06)
-
-  const fileInputRef = useRef<HTMLInputElement>(null)
   const previewContentRef = useRef<HTMLDivElement>(null)
 
   const currentTemplate =
@@ -42,16 +39,132 @@ export const ResumePreviewPanel = ({
   const CurrentTemplate = currentTemplate.component
 
   useEffect(() => {
-    setCurrentPage(0)
-  }, [currentTemplate.id])
-
-  useEffect(() => {
     const node = previewContentRef.current
     if (!node) return
 
     const updatePages = () => {
+      const allBlocks = Array.from(node.querySelectorAll<HTMLElement>('.pdf-page-block'))
+      const rootBlocks = allBlocks.filter(
+        (block) => !block.parentElement?.closest('.pdf-page-block'),
+      )
+
+      for (const block of rootBlocks) {
+        const cachedBaseMargin = block.dataset.previewBaseMarginTop
+        if (cachedBaseMargin) {
+          block.style.marginTop = cachedBaseMargin
+          continue
+        }
+
+        const baseMarginTop = block.style.marginTop || getComputedStyle(block).marginTop
+        block.dataset.previewBaseMarginTop = baseMarginTop
+        block.style.marginTop = baseMarginTop
+      }
+
+      let currentPageBottom = PREVIEW_PAGE_HEIGHT
+
+      for (const block of rootBlocks) {
+        const blockHeight = block.offsetHeight
+        const top = block.offsetTop
+        const bottom = top + blockHeight
+
+        if (bottom <= currentPageBottom) {
+          currentPageBottom = Math.max(
+            currentPageBottom,
+            Math.ceil(bottom / PREVIEW_PAGE_HEIGHT) * PREVIEW_PAGE_HEIGHT,
+          )
+          continue
+        }
+
+        if (blockHeight < PREVIEW_PAGE_HEIGHT) {
+          const pushDown = currentPageBottom - top
+          if (pushDown > 0) {
+            const baseMarginTop = Number.parseFloat(
+              block.dataset.previewBaseMarginTop ?? '0',
+            )
+            block.style.marginTop = `${baseMarginTop + pushDown}px`
+          }
+        }
+
+        const adjustedBottom = block.offsetTop + block.offsetHeight
+        currentPageBottom = Math.max(
+          PREVIEW_PAGE_HEIGHT,
+          Math.ceil(adjustedBottom / PREVIEW_PAGE_HEIGHT) * PREVIEW_PAGE_HEIGHT,
+        )
+      }
+
       const pageCount = Math.max(1, Math.ceil(node.scrollHeight / PREVIEW_PAGE_HEIGHT))
-      setTotalPages(pageCount)
+      onTotalPagesChange(pageCount)
+
+      const blockSummaries = rootBlocks.map((block) => {
+        const title =
+          block.dataset.pageLabel?.trim() ||
+          block.querySelector('h2, h3')?.textContent?.trim() ||
+          '模块'
+
+        return {
+          label: title,
+          top: block.offsetTop,
+          bottom: block.offsetTop + block.offsetHeight,
+          page: Math.floor(block.offsetTop / PREVIEW_PAGE_HEIGHT) + 1,
+        }
+      })
+
+      const firstPageBottom = Math.max(
+        blockSummaries
+          .filter((item) => item.page === 1)
+          .reduce((max, item) => Math.max(max, Math.min(item.bottom, PREVIEW_PAGE_HEIGHT)), 0),
+        Math.min(node.scrollHeight, PREVIEW_PAGE_HEIGHT),
+      )
+
+      const firstPageFreeSpace = Math.max(0, PREVIEW_PAGE_HEIGHT - firstPageBottom)
+      const approxLines = Math.max(1, Math.round(firstPageFreeSpace / 24))
+      const movedBlocks = blockSummaries.filter((item) => item.page > 1)
+      const movedLabels = [...new Set(movedBlocks.map((item) => item.label))]
+
+      if (pageCount === 1) {
+        if (firstPageFreeSpace <= TIGHT_FREE_SPACE_THRESHOLD) {
+          onInsightChange({
+            status: 'tight',
+            title: '接近一页边界',
+            detail: `当前还剩大约 ${approxLines} 行空间，再补内容很容易进到第二页。`,
+            suggestions: ['可稍微提高密度，或压缩摘要和项目描述。'],
+          })
+          return
+        }
+
+        onInsightChange({
+          status: 'fit',
+          title: '当前可稳定控制在一页',
+          detail: `第一页还有大约 ${approxLines} 行余量，可以继续补充少量信息。`,
+          suggestions: ['如果继续加内容，优先补项目结果或技能关键词。'],
+        })
+        return
+      }
+
+      const firstMoved = movedBlocks[0]
+      const suggestions: string[] = ['可以先把密度往右调一点，整体会更容易压回一页。']
+
+      if (movedLabels.some((label) => label.includes('项目'))) {
+        suggestions.push('优先精简项目经历，每段保留最关键的结果和技术点。')
+      }
+      if (movedLabels.some((label) => label.includes('工作'))) {
+        suggestions.push('工作经历每段尽量保留 3 到 4 条成果，减少长段落。')
+      }
+      if (movedLabels.some((label) => label.includes('教育'))) {
+        suggestions.push('教育经历可只保留学校、专业和一行补充说明。')
+      }
+      if (data.custom.enabled && movedLabels.some((label) => label === data.custom.title)) {
+        suggestions.push('自定义模块可以先压缩到 1 到 2 段核心内容。')
+      }
+
+      onInsightChange({
+        status: 'overflow',
+        title: `当前已扩展到 ${pageCount} 页`,
+        detail: firstMoved
+          ? `“${firstMoved.label}” 已经被推到第 ${firstMoved.page} 页。`
+          : '当前内容已经超出一页。',
+        suggestions: suggestions.slice(0, 3),
+      })
     }
 
     updatePages()
@@ -60,140 +173,14 @@ export const ResumePreviewPanel = ({
     observer.observe(node)
 
     return () => observer.disconnect()
-  }, [data, currentTemplate.id, density])
-
-  useEffect(() => {
-    if (currentPage > totalPages - 1) {
-      setCurrentPage(totalPages - 1)
-    }
-  }, [currentPage, totalPages])
-
-  const handleExportJson = () => {
-    const json = JSON.stringify(data, null, 2)
-    const blob = new Blob([json], { type: 'application/json' })
-    const url = URL.createObjectURL(blob)
-    const link = document.createElement('a')
-    const fileNameSeed = data.basic.fullName.trim().replace(/\s+/g, '-') || 'resume'
-    link.href = url
-    link.download = `${fileNameSeed}.json`
-    link.click()
-    URL.revokeObjectURL(url)
-  }
-
-  const triggerImport = () => {
-    fileInputRef.current?.click()
-  }
-
-  const handleImportJson = async (event: ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0]
-    if (!file) return
-
-    try {
-      const text = await file.text()
-      const nextData = parseResumeJson(text)
-      actions.replaceData(nextData)
-      setImportMessage('JSON 导入成功，已覆盖当前简历数据。')
-    } catch {
-      setImportMessage('导入失败：请确认 JSON 格式正确。')
-    } finally {
-      event.target.value = ''
-    }
-  }
-
-  const goPrevPage = () => setCurrentPage((prev) => Math.max(0, prev - 1))
-  const goNextPage = () =>
-    setCurrentPage((prev) => Math.min(totalPages - 1, prev + 1))
+  }, [data, currentTemplate.id, density, onInsightChange, onTotalPagesChange])
 
   return (
     <section className="relative">
       <div className="space-y-2">
-        <div className="z-20 bg-transparent py-0.5 lg:absolute lg:right-[15px] top-[-106px]">
-          <div className="flex w-full justify-center lg:w-auto">
-            <div className="flex w-fit flex-col items-end gap-2">
-              <div className="flex flex-wrap items-center justify-end gap-2">
-              <div className="w-[170px]">
-                <label className="sr-only">模板</label>
-                <select
-                  className="h-9 w-full rounded-lg border border-line bg-white px-3 text-sm outline-none focus:border-slate-400 focus:ring-2 focus:ring-slate-100"
-                  value={currentTemplate.id}
-                  onChange={(event) => actions.setTemplate(event.target.value)}
-                >
-                  {templateRegistry.map((item) => (
-                    <option key={item.id} value={item.id}>
-                      {item.name}
-                    </option>
-                  ))}
-                </select>
-              </div>
-
-              <div className="flex items-center gap-2">
-                <Button size="sm" onClick={goPrevPage} disabled={currentPage === 0}>
-                  上一页
-                </Button>
-                <span className="min-w-[74px] text-center font-mono text-xs text-slate">
-                  {currentPage + 1} / {totalPages}
-                </span>
-                <Button
-                  size="sm"
-                  onClick={goNextPage}
-                  disabled={currentPage >= totalPages - 1}
-                >
-                  下一页
-                </Button>
-              </div>
-
-              <div className="ml-1 flex items-center gap-1 rounded-lg border border-line bg-white px-2 py-1">
-                <span className="text-[11px] text-slate">高度</span>
-                <input
-                  type="range"
-                  min={0.9}
-                  max={1.14}
-                  step={0.01}
-                  value={density}
-                  onChange={(event) => setDensity(Number(event.target.value))}
-                  className="h-4 w-20 accent-slate-700"
-                />
-              </div>
-              </div>
-              <div className="flex flex-wrap items-center justify-end gap-2">
-              <Button size="sm" onClick={handleExportJson}>
-                导出 JSON
-              </Button>
-              <Button size="sm" onClick={triggerImport}>
-                导入 JSON
-              </Button>
-              <input
-                ref={fileInputRef}
-                type="file"
-                accept=".json,application/json"
-                className="hidden"
-                onChange={handleImportJson}
-              />
-              <Button
-                size="sm"
-                onClick={onPreviewPdf}
-                disabled={isPreviewingPdf || isExporting}
-              >
-                {isPreviewingPdf ? '预览中...' : '预览'}
-              </Button>
-              <Button
-                variant="primary"
-                size="sm"
-                onClick={onExport}
-                disabled={isExporting || isPreviewingPdf}
-              >
-                {isExporting ? '导出中...' : '导出 PDF'}
-              </Button>
-              </div>
-            </div>
-          </div>
-
-          {importMessage ? <p className="mt-2 text-xs text-slate">{importMessage}</p> : null}
-        </div>
-
         <div className="rounded-xl border border-line bg-paper-soft p-1.5 sm:p-2">
           <div
-            className="mx-auto w-full max-w-[980px] overflow-hidden rounded-xl border border-line bg-white shadow-panel"
+            className="mx-auto w-full max-w-[980px] overflow-hidden rounded-xl"
             style={{ height: PREVIEW_PAGE_HEIGHT }}
           >
             <div
@@ -209,9 +196,7 @@ export const ResumePreviewPanel = ({
           </div>
         </div>
 
-        <p className="px-1 text-xs text-slate">
-          当前为分页预览模式，支持翻页查看完整简历。
-        </p>
+        <p className="px-1 text-xs text-slate">当前为分页预览模式，支持翻页查看完整简历。</p>
       </div>
 
       <div
@@ -223,7 +208,9 @@ export const ResumePreviewPanel = ({
         }}
       >
         <div ref={previewRef}>
-          <CurrentTemplate data={data} density={density} />
+          <div className="pdf-render-scope">
+            <CurrentTemplate data={data} density={density} />
+          </div>
         </div>
       </div>
     </section>

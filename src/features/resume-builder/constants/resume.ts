@@ -10,6 +10,7 @@ import type {
 } from '../types/resume'
 
 export const RESUME_STORAGE_KEY = 'resume-builder:data:v1'
+export const RESUME_WORKSPACE_STORAGE_KEY = 'resume-builder:workspace:v1'
 
 export const createEmptyExperience = (): ExperienceItem => ({
   id: createId(),
@@ -43,9 +44,10 @@ export const createEmptyProject = (): ProjectItem => ({
 export const STEP_ITEMS: StepItem[] = [
   { id: 'basic', title: '基础信息', description: '姓名、联系方式、头像' },
   { id: 'experience', title: '工作经历', description: '多段工作经历' },
-  { id: 'project', title: '项目经历', description: '项目结果与技术栈' },
+  { id: 'project', title: '项目经历', description: '项目成果与技术栈' },
   { id: 'education', title: '教育经历', description: '学校与学位' },
   { id: 'skills', title: '技能清单', description: '核心技能关键词' },
+  { id: 'custom', title: '自定义模块', description: '放在简历最底部的额外内容' },
 ]
 
 export const DEFAULT_SECTION_ORDER: ResumeSectionId[] = [
@@ -112,4 +114,9 @@ export const DEFAULT_RESUME_DATA: ResumeData = {
     },
   ],
   skills: ['React', 'TypeScript', 'Tailwind CSS', 'Node.js', 'Vite'],
+  custom: {
+    enabled: false,
+    title: '自定义模块',
+    content: '',
+  },
 }

@@ -1,70 +1,271 @@
-import { useEffect, useMemo, useReducer } from 'react'
-import { loadResumeData, saveResumeData } from '../lib/storage'
+import { useEffect, useMemo, useState } from 'react'
+import { DEFAULT_RESUME_DATA } from '../constants/resume'
+import { loadResumeWorkspace, saveResumeWorkspace } from '../lib/storage'
 import { resumeReducer } from '../state/resumeReducer'
-import type { ResumeActions } from '../types/actions'
+import type {
+  ResumeActions,
+  ResumeVersionActions,
+  ResumeVersionSummary,
+} from '../types/actions'
+import type { ResumeData, ResumeWorkspace } from '../types/resume'
+import { createId } from '../../../shared/createId'
+
+const getNextVersionName = (workspace: ResumeWorkspace) => {
+  const maxIndex = workspace.versions.reduce((max, version) => {
+    const match = version.name.match(/^版本\s*(\d+)$/)
+    return match ? Math.max(max, Number(match[1])) : max
+  }, 0)
+
+  return `版本 ${maxIndex + 1}`
+}
+
+const withUpdatedActiveVersion = (
+  workspace: ResumeWorkspace,
+  updater: (data: ResumeData) => ResumeData,
+): ResumeWorkspace => ({
+  ...workspace,
+  versions: workspace.versions.map((version) =>
+    version.id === workspace.activeVersionId
+      ? {
+          ...version,
+          updatedAt: new Date().toISOString(),
+          data: updater(version.data),
+        }
+      : version,
+  ),
+})
 
 export const useResumeBuilder = () => {
-  const [data, dispatch] = useReducer(resumeReducer, undefined, loadResumeData)
+  const [workspace, setWorkspace] = useState(loadResumeWorkspace)
 
   useEffect(() => {
-    saveResumeData(data)
-  }, [data])
+    saveResumeWorkspace(workspace)
+  }, [workspace])
+
+  const activeVersion =
+    workspace.versions.find((item) => item.id === workspace.activeVersionId) ||
+    workspace.versions[0]
+
+  const data = activeVersion.data
 
   const actions = useMemo<ResumeActions>(
     () => ({
-      updateBasicField: (
-        field:
-          | 'fullName'
-          | 'role'
-          | 'email'
-          | 'phone'
-          | 'location'
-          | 'website'
-          | 'summary'
-          | 'avatar',
-        value: string,
-      ) => {
-        dispatch({ type: 'basic/update-field', field, value })
+      updateBasicField: (field, value) => {
+        setWorkspace((prev) =>
+          withUpdatedActiveVersion(prev, (current) =>
+            resumeReducer(current, { type: 'basic/update-field', field, value }),
+          ),
+        )
       },
-      addExperience: () => dispatch({ type: 'experience/add' }),
-      removeExperience: (id: string) => dispatch({ type: 'experience/remove', id }),
-      updateExperienceField: (
-        id: string,
-        field: 'company' | 'position' | 'startDate' | 'endDate' | 'description',
-        value: string,
-      ) => dispatch({ type: 'experience/update-field', id, field, value }),
-      addEducation: () => dispatch({ type: 'education/add' }),
-      removeEducation: (id: string) => dispatch({ type: 'education/remove', id }),
-      updateEducationField: (
-        id: string,
-        field: 'school' | 'degree' | 'startDate' | 'endDate' | 'description',
-        value: string,
-      ) => dispatch({ type: 'education/update-field', id, field, value }),
-      addProject: () => dispatch({ type: 'project/add' }),
-      removeProject: (id: string) => dispatch({ type: 'project/remove', id }),
-      updateProjectField: (
-        id: string,
-        field:
-          | 'name'
-          | 'role'
-          | 'techStack'
-          | 'startDate'
-          | 'endDate'
-          | 'link'
-          | 'description',
-        value: string,
-      ) => dispatch({ type: 'project/update-field', id, field, value }),
-      setSkills: (skills: string[]) => dispatch({ type: 'skills/set', skills }),
-      setTemplate: (templateId: string) =>
-        dispatch({ type: 'template/set', templateId }),
+      addExperience: () =>
+        setWorkspace((prev) =>
+          withUpdatedActiveVersion(prev, (current) =>
+            resumeReducer(current, { type: 'experience/add' }),
+          ),
+        ),
+      removeExperience: (id) =>
+        setWorkspace((prev) =>
+          withUpdatedActiveVersion(prev, (current) =>
+            resumeReducer(current, { type: 'experience/remove', id }),
+          ),
+        ),
+      updateExperienceField: (id, field, value) =>
+        setWorkspace((prev) =>
+          withUpdatedActiveVersion(prev, (current) =>
+            resumeReducer(current, {
+              type: 'experience/update-field',
+              id,
+              field,
+              value,
+            }),
+          ),
+        ),
+      addEducation: () =>
+        setWorkspace((prev) =>
+          withUpdatedActiveVersion(prev, (current) =>
+            resumeReducer(current, { type: 'education/add' }),
+          ),
+        ),
+      removeEducation: (id) =>
+        setWorkspace((prev) =>
+          withUpdatedActiveVersion(prev, (current) =>
+            resumeReducer(current, { type: 'education/remove', id }),
+          ),
+        ),
+      updateEducationField: (id, field, value) =>
+        setWorkspace((prev) =>
+          withUpdatedActiveVersion(prev, (current) =>
+            resumeReducer(current, {
+              type: 'education/update-field',
+              id,
+              field,
+              value,
+            }),
+          ),
+        ),
+      addProject: () =>
+        setWorkspace((prev) =>
+          withUpdatedActiveVersion(prev, (current) =>
+            resumeReducer(current, { type: 'project/add' }),
+          ),
+        ),
+      removeProject: (id) =>
+        setWorkspace((prev) =>
+          withUpdatedActiveVersion(prev, (current) =>
+            resumeReducer(current, { type: 'project/remove', id }),
+          ),
+        ),
+      updateProjectField: (id, field, value) =>
+        setWorkspace((prev) =>
+          withUpdatedActiveVersion(prev, (current) =>
+            resumeReducer(current, {
+              type: 'project/update-field',
+              id,
+              field,
+              value,
+            }),
+          ),
+        ),
+      setSkills: (skills) =>
+        setWorkspace((prev) =>
+          withUpdatedActiveVersion(prev, (current) =>
+            resumeReducer(current, { type: 'skills/set', skills }),
+          ),
+        ),
+      setTemplate: (templateId) =>
+        setWorkspace((prev) =>
+          withUpdatedActiveVersion(prev, (current) =>
+            resumeReducer(current, { type: 'template/set', templateId }),
+          ),
+        ),
       updateSectionTitle: (sectionId, title) =>
-        dispatch({ type: 'section/title-set', sectionId, title }),
+        setWorkspace((prev) =>
+          withUpdatedActiveVersion(prev, (current) =>
+            resumeReducer(current, { type: 'section/title-set', sectionId, title }),
+          ),
+        ),
       moveSection: (sourceId, targetId) =>
-        dispatch({ type: 'section/move', sourceId, targetId }),
-      replaceData: (nextData) => dispatch({ type: 'data/replace', data: nextData }),
+        setWorkspace((prev) =>
+          withUpdatedActiveVersion(prev, (current) =>
+            resumeReducer(current, { type: 'section/move', sourceId, targetId }),
+          ),
+        ),
+      toggleCustomSection: (enabled) =>
+        setWorkspace((prev) =>
+          withUpdatedActiveVersion(prev, (current) =>
+            resumeReducer(current, { type: 'custom/toggle', enabled }),
+          ),
+        ),
+      updateCustomTitle: (title) =>
+        setWorkspace((prev) =>
+          withUpdatedActiveVersion(prev, (current) =>
+            resumeReducer(current, { type: 'custom/title-set', title }),
+          ),
+        ),
+      updateCustomContent: (content) =>
+        setWorkspace((prev) =>
+          withUpdatedActiveVersion(prev, (current) =>
+            resumeReducer(current, { type: 'custom/content-set', content }),
+          ),
+        ),
+      replaceData: (nextData) =>
+        setWorkspace((prev) =>
+          withUpdatedActiveVersion(prev, () =>
+            resumeReducer(nextData, { type: 'data/replace', data: nextData }),
+          ),
+        ),
     }),
     [],
   )
 
-  return { data, actions }
+  const versionActions = useMemo<ResumeVersionActions>(
+    () => ({
+      switchVersion: (id) =>
+        setWorkspace((prev) =>
+          prev.versions.some((item) => item.id === id)
+            ? { ...prev, activeVersionId: id }
+            : prev,
+        ),
+      createVersion: () =>
+        setWorkspace((prev) => {
+          const nextVersion = {
+            id: createId(),
+            name: getNextVersionName(prev),
+            updatedAt: new Date().toISOString(),
+            data: structuredClone(DEFAULT_RESUME_DATA),
+          }
+
+          return {
+            activeVersionId: nextVersion.id,
+            versions: [...prev.versions, nextVersion],
+          }
+        }),
+      duplicateVersion: () =>
+        setWorkspace((prev) => {
+          const source =
+            prev.versions.find((item) => item.id === prev.activeVersionId) || prev.versions[0]
+          const nextVersion = {
+            id: createId(),
+            name: getNextVersionName(prev),
+            updatedAt: new Date().toISOString(),
+            data: structuredClone(source.data),
+          }
+
+          return {
+            activeVersionId: nextVersion.id,
+            versions: [...prev.versions, nextVersion],
+          }
+        }),
+      renameVersion: (name) =>
+        setWorkspace((prev) => ({
+          ...prev,
+          versions: prev.versions.map((version) =>
+            version.id === prev.activeVersionId
+              ? {
+                  ...version,
+                  name: name.trim() || '未命名版本',
+                  updatedAt: new Date().toISOString(),
+                }
+              : version,
+          ),
+        })),
+      deleteVersion: () =>
+        setWorkspace((prev) => {
+          if (prev.versions.length <= 1) return prev
+
+          const currentIndex = prev.versions.findIndex(
+            (item) => item.id === prev.activeVersionId,
+          )
+          const nextVersions = prev.versions.filter(
+            (item) => item.id !== prev.activeVersionId,
+          )
+          const fallbackIndex = Math.max(0, currentIndex - 1)
+
+          return {
+            activeVersionId: nextVersions[fallbackIndex]?.id || nextVersions[0].id,
+            versions: nextVersions,
+          }
+        }),
+    }),
+    [],
+  )
+
+  const versions = useMemo<ResumeVersionSummary[]>(
+    () =>
+      workspace.versions.map(({ id, name, updatedAt }) => ({
+        id,
+        name,
+        updatedAt,
+      })),
+    [workspace.versions],
+  )
+
+  return {
+    data,
+    actions,
+    versions,
+    activeVersionId: workspace.activeVersionId,
+    activeVersionName: activeVersion.name,
+    versionActions,
+  }
 }

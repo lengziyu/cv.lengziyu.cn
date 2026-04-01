@@ -38,7 +38,7 @@ body {
   white-space: nowrap;
   box-sizing: border-box;
   position: relative;
-  top: 1px;
+  top: 0;
 }
 
 .pdf-pill-contact {
@@ -61,7 +61,21 @@ body {
   display: block;
   font-size: 12px;
   line-height: 12px;
-  transform: translateY(-1.5px);
+  transform: translateY(0);
+}
+
+.pdf-render-scope .pdf-pill {
+  top: -1px;
+}
+
+.pdf-render-scope .pdf-pill-label {
+  line-height: 12px;
+  transform: translateY(-4px);
+}
+
+.pdf-page-block {
+  break-inside: avoid;
+  page-break-inside: avoid;
 }
 
 @media print {

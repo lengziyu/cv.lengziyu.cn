@@ -1,6 +1,6 @@
 export type ResumeSectionId = 'experience' | 'project' | 'education' | 'skills'
 
-export type ResumeStepId = 'basic' | ResumeSectionId
+export type ResumeStepId = 'basic' | ResumeSectionId | 'custom'
 
 export type ResumeSectionTitles = Record<ResumeSectionId, string>
 
@@ -44,6 +44,12 @@ export interface ProjectItem {
   description: string
 }
 
+export interface CustomSection {
+  enabled: boolean
+  title: string
+  content: string
+}
+
 export interface ResumeData {
   templateId: string
   basic: BasicInfo
@@ -53,6 +59,19 @@ export interface ResumeData {
   projects: ProjectItem[]
   education: EducationItem[]
   skills: string[]
+  custom: CustomSection
+}
+
+export interface ResumeVersion {
+  id: string
+  name: string
+  updatedAt: string
+  data: ResumeData
+}
+
+export interface ResumeWorkspace {
+  activeVersionId: string
+  versions: ResumeVersion[]
 }
 
 export interface StepItem {

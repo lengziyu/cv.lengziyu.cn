@@ -20,11 +20,11 @@ export const ModernSlateTemplate = ({ data, density = 1 }: ResumeTemplateProps) 
 
   const sections: Record<ResumeSectionId, ReactNode> = {
     experience: (
-      <section className="rounded-xl border border-slate-200/80 bg-white" style={{ marginTop: `${20 * d}px`, padding: `${14 * d}px` }}>
+      <section className="pdf-page-block rounded-xl border border-slate-200/80 bg-white" style={{ marginTop: `${20 * d}px`, padding: `${14 * d}px` }}>
         <SectionTitle>{data.sectionTitles.experience}</SectionTitle>
         <div className="mt-3 space-y-4">
           {experiences.map((item) => (
-            <div key={item.id} className="rounded-lg bg-slate-50/70 p-3">
+            <div key={item.id} className="pdf-page-block rounded-lg bg-slate-50/70 p-3">
               <div className="flex flex-wrap justify-between gap-2">
                 <div>
                   <p className="text-sm font-semibold text-slate-900">{item.position}</p>
@@ -45,11 +45,11 @@ export const ModernSlateTemplate = ({ data, density = 1 }: ResumeTemplateProps) 
       </section>
     ),
     project: (
-      <section className="rounded-xl border border-slate-200/80 bg-white" style={{ marginTop: `${20 * d}px`, padding: `${14 * d}px` }}>
+      <section className="pdf-page-block rounded-xl border border-slate-200/80 bg-white" style={{ marginTop: `${20 * d}px`, padding: `${14 * d}px` }}>
         <SectionTitle>{data.sectionTitles.project}</SectionTitle>
         <div className="mt-3 space-y-4">
           {projects.map((item) => (
-            <div key={item.id} className="rounded-lg bg-slate-50/70 p-3">
+            <div key={item.id} className="pdf-page-block rounded-lg bg-slate-50/70 p-3">
               <div className="flex flex-wrap justify-between gap-2">
                 <p className="text-sm font-semibold text-slate-900">{item.name}</p>
                 <p className="text-xs text-slate-500">
@@ -65,11 +65,11 @@ export const ModernSlateTemplate = ({ data, density = 1 }: ResumeTemplateProps) 
       </section>
     ),
     education: (
-      <section className="rounded-xl border border-slate-200/80 bg-white" style={{ marginTop: `${20 * d}px`, padding: `${14 * d}px` }}>
+      <section className="pdf-page-block rounded-xl border border-slate-200/80 bg-white" style={{ marginTop: `${20 * d}px`, padding: `${14 * d}px` }}>
         <SectionTitle>{data.sectionTitles.education}</SectionTitle>
         <div className="mt-3 space-y-3">
           {education.map((item) => (
-            <div key={item.id}>
+            <div key={item.id} className="pdf-page-block">
               <p className="text-sm font-semibold text-slate-900">{item.school}</p>
               <p className="text-xs text-slate-600">{item.degree}</p>
               <p className="text-xs text-slate-500">
@@ -81,7 +81,7 @@ export const ModernSlateTemplate = ({ data, density = 1 }: ResumeTemplateProps) 
       </section>
     ),
     skills: (
-      <section className="rounded-xl border border-slate-200/80 bg-white" style={{ marginTop: `${20 * d}px`, padding: `${14 * d}px` }}>
+      <section className="pdf-page-block rounded-xl border border-slate-200/80 bg-white" style={{ marginTop: `${20 * d}px`, padding: `${14 * d}px` }}>
         <SectionTitle>{data.sectionTitles.skills}</SectionTitle>
         <div className="mt-3 flex flex-wrap gap-2">
           {skills.map((skill) => (
@@ -135,6 +135,20 @@ export const ModernSlateTemplate = ({ data, density = 1 }: ResumeTemplateProps) 
       {sectionOrder.map((id) => (
         <div key={id}>{sections[id]}</div>
       ))}
+
+      {data.custom.enabled ? (
+        <section
+          className="pdf-page-block rounded-xl border border-slate-200/80 bg-white"
+          style={{ marginTop: `${20 * d}px`, padding: `${14 * d}px` }}
+        >
+          <SectionTitle>{data.custom.title}</SectionTitle>
+          <div className="mt-3 rounded-lg bg-slate-50/70 p-3">
+            <p className="whitespace-pre-line text-sm leading-7 text-slate-700">
+              {data.custom.content || '请填写自定义模块内容。'}
+            </p>
+          </div>
+        </section>
+      ) : null}
     </article>
   )
 }

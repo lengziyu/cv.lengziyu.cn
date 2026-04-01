@@ -1,6 +1,7 @@
 import type { ResumeActions } from '../types/actions'
 import type { ResumeData, ResumeStepId } from '../types/resume'
 import { BasicInfoSection } from './sections/BasicInfoSection'
+import { CustomSection } from './sections/CustomSection'
 import { EducationSection } from './sections/EducationSection'
 import { ExperienceSection } from './sections/ExperienceSection'
 import { ProjectsSection } from './sections/ProjectsSection'
@@ -28,6 +29,8 @@ const renderStepSection = (
       return <ProjectsSection data={data} actions={actions} />
     case 'skills':
       return <SkillsSection data={data} actions={actions} />
+    case 'custom':
+      return <CustomSection data={data} actions={actions} />
     default:
       return null
   }
