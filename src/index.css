@@ -35,40 +35,29 @@ body {
   vertical-align: middle;
   white-space: nowrap;
   box-sizing: border-box;
-  position: relative;
-  top: 0;
 }
 
 .pdf-pill-contact {
-  min-height: 28px;
+  height: 28px;
   padding: 0 22px;
 }
 
 .pdf-pill-tag {
-  min-height: 26px;
+  height: 26px;
   padding: 0 10px;
   font-weight: 500;
 }
 
 .pdf-pill-tag-compact {
-  min-height: 22px;
+  height: 22px;
   padding: 0 10px;
 }
 
 .pdf-pill-label {
   display: block;
   font-size: 12px;
-  line-height: 12px;
-  transform: translateY(0);
-}
-
-.pdf-render-scope .pdf-pill {
-  top: -1px;
-}
-
-.pdf-render-scope .pdf-pill-label {
-  line-height: 12px;
-  transform: translateY(-4px);
+  line-height: 1;
+  transform: translateY(-1px);
 }
 
 .pdf-page-block {
