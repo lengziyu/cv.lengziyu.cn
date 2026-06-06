@@ -63,12 +63,13 @@ const ExperienceSection = ({
   items: ExperienceItem[]
   density: number
 }) => (
-  <section className="pdf-page-block" style={{ marginTop: `${16 * density}px` }}>
+  <section style={{ marginTop: `${16 * density}px` }}>
     <h2 className="text-xs font-semibold uppercase tracking-[0.12em] text-slate">{title}</h2>
     <div className="mt-3 flex flex-col" style={{ gap: `${12 * density}px` }}>
       {items.map((item) => (
         <div
           key={item.id}
+          data-page-label={item.position || title}
           className="pdf-page-block flex flex-col justify-center rounded-xl border border-line"
           style={{
             padding: `${12 * density}px`,
@@ -102,12 +103,13 @@ const ProjectSection = ({
   items: ProjectItem[]
   density: number
 }) => (
-  <section className="pdf-page-block" style={{ marginTop: `${16 * density}px` }}>
+  <section style={{ marginTop: `${16 * density}px` }}>
     <h2 className="text-xs font-semibold uppercase tracking-[0.12em] text-slate">{title}</h2>
     <div className="mt-3 flex flex-col" style={{ gap: `${12 * density}px` }}>
       {items.map((item) => (
         <div
           key={item.id}
+          data-page-label={item.name || title}
           className="pdf-page-block flex flex-col justify-center rounded-xl border border-line"
           style={{
             padding: `${12 * density}px`,
@@ -163,12 +165,13 @@ const EducationSection = ({
   items: EducationItem[]
   density: number
 }) => (
-  <section className="pdf-page-block" style={{ marginTop: `${16 * density}px` }}>
+  <section style={{ marginTop: `${16 * density}px` }}>
     <h2 className="text-xs font-semibold uppercase tracking-[0.12em] text-slate">{title}</h2>
     <div className="mt-3 flex flex-col" style={{ gap: `${12 * density}px` }}>
       {items.map((item) => (
         <div
           key={item.id}
+          data-page-label={item.school || title}
           className="pdf-page-block flex flex-col justify-center rounded-xl border border-line"
           style={{
             padding: `${12 * density}px`,

@@ -29,35 +29,47 @@ body {
 }
 
 .pdf-pill {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
+  display: inline-block;
   vertical-align: middle;
   white-space: nowrap;
   box-sizing: border-box;
+  text-align: center;
 }
 
 .pdf-pill-contact {
   height: 28px;
+  line-height: 28px;
   padding: 0 22px;
 }
 
 .pdf-pill-tag {
   height: 26px;
+  line-height: 26px;
   padding: 0 10px;
   font-weight: 500;
 }
 
 .pdf-pill-tag-compact {
   height: 22px;
+  line-height: 22px;
   padding: 0 10px;
 }
 
 .pdf-pill-label {
-  display: block;
+  display: inline;
   font-size: 12px;
-  line-height: 1;
-  transform: translateY(-1px);
+  line-height: inherit;
+}
+
+.pdf-pill-contact .pdf-pill-label {
+  position: relative;
+  top: -2px;
+}
+
+.pdf-pill-tag .pdf-pill-label,
+.pdf-pill-tag-compact .pdf-pill-label {
+  position: relative;
+  top: -1px;
 }
 
 .pdf-page-block {

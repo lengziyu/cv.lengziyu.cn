@@ -51,7 +51,7 @@ export interface ResumeActions {
   replaceData: (data: ResumeData) => void
 }
 
-export interface ResumeVersionSummary extends Pick<ResumeVersion, 'id' | 'name' | 'updatedAt'> {}
+export type ResumeVersionSummary = Pick<ResumeVersion, 'id' | 'name' | 'updatedAt'>
 
 export interface ResumeVersionActions {
   switchVersion: (id: string) => void

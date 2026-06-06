@@ -10,6 +10,7 @@ import { ResumePreviewToolbar } from './features/resume-builder/components/Resum
 import { ResumeStepSidebar } from './features/resume-builder/components/ResumeStepSidebar'
 import { useResumeBuilder } from './features/resume-builder/hooks/useResumeBuilder'
 import { exportResumePdf } from './features/resume-builder/lib/exportPdf'
+import { exportResumeWord } from './features/resume-builder/lib/exportWord'
 import type { ResumeStepId } from './features/resume-builder/types/resume'
 
 const DEFAULT_PREVIEW_INSIGHT: ResumePreviewInsight = {
@@ -19,9 +20,22 @@ const DEFAULT_PREVIEW_INSIGHT: ResumePreviewInsight = {
   suggestions: [],
 }
 
+const getResumeFileNameSeed = (fullName: string, role: string) => {
+  const sanitize = (value: string) =>
+    value
+      .trim()
+      .replace(/\s+/g, '-')
+      .replace(/[\\/:*?"<>|]/g, '')
+
+  const namePart = sanitize(fullName) || 'resume'
+  const rolePart = sanitize(role)
+  return rolePart ? `${namePart}-${rolePart}` : namePart
+}
+
 function App() {
   const [activeStep, setActiveStep] = useState<ResumeStepId>('basic')
   const [isExporting, setIsExporting] = useState(false)
+  const [isExportingWord, setIsExportingWord] = useState(false)
   const [isPreviewingPdf, setIsPreviewingPdf] = useState(false)
   const [currentPage, setCurrentPage] = useState(0)
   const [totalPages, setTotalPages] = useState(1)
@@ -54,25 +68,29 @@ function App() {
 
   useEffect(() => {
     setIsInsightVisible(previewInsight.status !== 'fit')
-  }, [insightSignature])
+  }, [insightSignature, previewInsight.status])
 
   const handleExport = async () => {
     if (!previewRef.current || isExporting) return
 
     setIsExporting(true)
     try {
-      const sanitize = (value: string) =>
-        value
-          .trim()
-          .replace(/\s+/g, '-')
-          .replace(/[\\/:*?"<>|]/g, '')
-
-      const namePart = sanitize(data.basic.fullName) || 'resume'
-      const rolePart = sanitize(data.basic.role)
-      const fileNameSeed = rolePart ? `${namePart}-${rolePart}` : namePart
+      const fileNameSeed = getResumeFileNameSeed(data.basic.fullName, data.basic.role)
       await exportResumePdf(previewRef.current, `${fileNameSeed}.pdf`, 'save')
     } finally {
       setIsExporting(false)
+    }
+  }
+
+  const handleExportWord = async () => {
+    if (isExportingWord) return
+
+    setIsExportingWord(true)
+    try {
+      const fileNameSeed = getResumeFileNameSeed(data.basic.fullName, data.basic.role)
+      await exportResumeWord(data, `${fileNameSeed}.docx`)
+    } finally {
+      setIsExportingWord(false)
     }
   }
 
@@ -81,15 +99,7 @@ function App() {
 
     setIsPreviewingPdf(true)
     try {
-      const sanitize = (value: string) =>
-        value
-          .trim()
-          .replace(/\s+/g, '-')
-          .replace(/[\\/:*?"<>|]/g, '')
-
-      const namePart = sanitize(data.basic.fullName) || 'resume'
-      const rolePart = sanitize(data.basic.role)
-      const fileNameSeed = rolePart ? `${namePart}-${rolePart}` : namePart
+      const fileNameSeed = getResumeFileNameSeed(data.basic.fullName, data.basic.role)
       await exportResumePdf(previewRef.current, `${fileNameSeed}.pdf`, 'preview')
     } finally {
       setIsPreviewingPdf(false)
@@ -181,11 +191,13 @@ function App() {
                 totalPages={totalPages}
                 density={density}
                 isExporting={isExporting}
+                isExportingWord={isExportingWord}
                 isPreviewingPdf={isPreviewingPdf}
                 onDensityChange={setDensity}
                 onPrevPage={goPrevPage}
                 onNextPage={goNextPage}
                 onExport={handleExport}
+                onExportWord={handleExportWord}
                 onPreviewPdf={handlePreviewPdf}
               />
             </div>

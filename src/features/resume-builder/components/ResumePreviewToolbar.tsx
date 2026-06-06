@@ -20,11 +20,13 @@ interface ResumePreviewToolbarProps {
   totalPages: number
   density: number
   isExporting: boolean
+  isExportingWord: boolean
   isPreviewingPdf: boolean
   onDensityChange: (next: number) => void
   onPrevPage: () => void
   onNextPage: () => void
   onExport: () => void
+  onExportWord: () => void
   onPreviewPdf: () => void
 }
 
@@ -38,11 +40,13 @@ export const ResumePreviewToolbar = ({
   totalPages,
   density,
   isExporting,
+  isExportingWord,
   isPreviewingPdf,
   onDensityChange,
   onPrevPage,
   onNextPage,
   onExport,
+  onExportWord,
   onPreviewPdf,
 }: ResumePreviewToolbarProps) => {
   const [importMessage, setImportMessage] = useState('')
@@ -177,14 +181,25 @@ export const ResumePreviewToolbar = ({
             className="hidden"
             onChange={handleImportJson}
           />
-          <Button size="sm" onClick={onPreviewPdf} disabled={isPreviewingPdf || isExporting}>
+          <Button
+            size="sm"
+            onClick={onExportWord}
+            disabled={isExportingWord || isPreviewingPdf || isExporting}
+          >
+            {isExportingWord ? '导出中...' : '导出 Word'}
+          </Button>
+          <Button
+            size="sm"
+            onClick={onPreviewPdf}
+            disabled={isPreviewingPdf || isExporting || isExportingWord}
+          >
             {isPreviewingPdf ? '预览中...' : '预览 PDF'}
           </Button>
           <Button
             variant="primary"
             size="sm"
             onClick={onExport}
-            disabled={isExporting || isPreviewingPdf}
+            disabled={isExporting || isPreviewingPdf || isExportingWord}
           >
             {isExporting ? '导出中...' : '导出 PDF'}
           </Button>

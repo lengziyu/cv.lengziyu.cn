@@ -13,6 +13,7 @@
     "@fontsource/ibm-plex-mono": "^5.2.7",
     "@fontsource/plus-jakarta-sans": "^5.2.8",
     "clsx": "^2.1.1",
+    "docx": "^9.7.1",
     "html2pdf.js": "^0.14.0",
     "react": "^19.2.4",
     "react-dom": "^19.2.4"

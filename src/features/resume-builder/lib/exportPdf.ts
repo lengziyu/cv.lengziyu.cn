@@ -32,6 +32,40 @@ export const exportResumePdf = async (
             break-inside: avoid !important;
             page-break-inside: avoid !important;
           }
+          .pdf-pill {
+            display: inline-block !important;
+            vertical-align: middle !important;
+            box-sizing: border-box !important;
+            text-align: center !important;
+          }
+          .pdf-pill-contact {
+            height: 28px !important;
+            line-height: 28px !important;
+          }
+          .pdf-pill-tag {
+            height: 26px !important;
+            line-height: 26px !important;
+          }
+          .pdf-pill-tag-compact {
+            height: 22px !important;
+            line-height: 22px !important;
+          }
+          .pdf-pill-label {
+            display: inline !important;
+            line-height: inherit !important;
+          }
+          .pdf-pill-contact .pdf-pill-label {
+            position: relative !important;
+            top: -8px !important;
+          }
+          .pdf-pill-tag .pdf-pill-label {
+            position: relative !important;
+            top: -7px !important;
+          }
+          .pdf-pill-tag-compact .pdf-pill-label {
+            position: relative !important;
+            top: -9px !important;
+          }
         `
         doc.head.appendChild(style)
       },
