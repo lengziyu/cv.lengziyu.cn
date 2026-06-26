@@ -6,6 +6,7 @@ import { getVisibleCustomSections } from '../lib/sections'
 
 const PREVIEW_PAGE_HEIGHT = 1122
 const TIGHT_FREE_SPACE_THRESHOLD = 24 * 3
+const MIN_VISIBLE_LAST_PAGE_HEIGHT = 56
 
 export interface ResumePreviewInsight {
   status: 'fit' | 'tight' | 'overflow'
@@ -93,9 +94,6 @@ export const ResumePreviewPanel = ({
         )
       }
 
-      const pageCount = Math.max(1, Math.ceil(node.scrollHeight / PREVIEW_PAGE_HEIGHT))
-      onTotalPagesChange(pageCount)
-
       const blockSummaries = rootBlocks.map((block) => {
         const title =
           block.dataset.pageLabel?.trim() ||
@@ -109,6 +107,21 @@ export const ResumePreviewPanel = ({
           page: Math.floor(block.offsetTop / PREVIEW_PAGE_HEIGHT) + 1,
         }
       })
+
+      const rawPageCount = Math.max(1, Math.ceil(node.scrollHeight / PREVIEW_PAGE_HEIGHT))
+      const lastContentBottom = blockSummaries.reduce(
+        (max, item) => Math.max(max, item.bottom),
+        0,
+      )
+      const lastPageUsedHeight =
+        lastContentBottom - (rawPageCount - 1) * PREVIEW_PAGE_HEIGHT
+
+      const pageCount =
+        rawPageCount > 1 && lastPageUsedHeight > 0 && lastPageUsedHeight < MIN_VISIBLE_LAST_PAGE_HEIGHT
+          ? rawPageCount - 1
+          : rawPageCount
+
+      onTotalPagesChange(pageCount)
 
       const firstPageBottom = Math.max(
         blockSummaries
