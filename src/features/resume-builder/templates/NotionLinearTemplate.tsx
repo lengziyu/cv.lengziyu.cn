@@ -44,11 +44,14 @@ const renderLines = (text: string) => {
   }
 
   return (
-    <ul className="space-y-2">
+    <ul className="m-0 list-none space-y-2 p-0">
       {lines.map((line, index) => (
-        <li key={`${line}-${index}`} className="flex gap-2 text-sm leading-6 text-slate">
+        <li
+          key={`${line}-${index}`}
+          className="grid grid-cols-[10px_minmax(0,1fr)] items-start gap-x-3 text-sm leading-6 text-slate"
+        >
           <span className="mt-2 block h-1.5 w-1.5 rounded-full bg-slate/60" />
-          <span>{line}</span>
+          <span className="min-w-0">{line}</span>
         </li>
       ))}
     </ul>
@@ -66,15 +69,15 @@ const ExperienceSection = ({
 }) => (
   <section style={{ marginTop: `${16 * density}px` }}>
     <h2 className="text-xs font-semibold uppercase tracking-[0.12em] text-slate">{title}</h2>
-    <div className="mt-3 flex flex-col" style={{ gap: `${12 * density}px` }}>
+    <div className="mt-3 flex flex-col" style={{ gap: `${10 * density}px` }}>
       {items.map((item) => (
         <div
           key={item.id}
           data-page-label={item.company || title}
-          className="pdf-page-block flex flex-col justify-center rounded-xl border border-line"
+          className="pdf-page-block flex flex-col justify-start rounded-xl border border-line"
           style={{
-            padding: `${12 * density}px`,
-            minHeight: `${Math.max(104, Math.min(168, 120 * density))}px`,
+            padding: `${11 * density}px`,
+            minHeight: `${Math.max(92, Math.min(148, 108 * density))}px`,
           }}
         >
           <div className="flex flex-wrap items-start justify-between gap-2">
@@ -106,15 +109,15 @@ const ProjectSection = ({
 }) => (
   <section style={{ marginTop: `${16 * density}px` }}>
     <h2 className="text-xs font-semibold uppercase tracking-[0.12em] text-slate">{title}</h2>
-    <div className="mt-3 flex flex-col" style={{ gap: `${12 * density}px` }}>
+    <div className="mt-3 flex flex-col" style={{ gap: `${10 * density}px` }}>
       {items.map((item) => (
         <div
           key={item.id}
           data-page-label={item.name || title}
-          className="pdf-page-block flex flex-col justify-center rounded-xl border border-line"
+          className="pdf-page-block flex flex-col justify-start rounded-xl border border-line"
           style={{
-            padding: `${12 * density}px`,
-            minHeight: `${Math.max(110, Math.min(210, 146 * density))}px`,
+            padding: `${11 * density}px`,
+            minHeight: `${Math.max(96, Math.min(176, 124 * density))}px`,
           }}
         >
           <div className="flex flex-wrap items-start justify-between gap-2">
@@ -168,15 +171,15 @@ const EducationSection = ({
 }) => (
   <section style={{ marginTop: `${16 * density}px` }}>
     <h2 className="text-xs font-semibold uppercase tracking-[0.12em] text-slate">{title}</h2>
-    <div className="mt-3 flex flex-col" style={{ gap: `${12 * density}px` }}>
+    <div className="mt-3 flex flex-col" style={{ gap: `${10 * density}px` }}>
       {items.map((item) => (
         <div
           key={item.id}
           data-page-label={item.school || title}
-          className="pdf-page-block flex flex-col justify-center rounded-xl border border-line"
+          className="pdf-page-block flex flex-col justify-start rounded-xl border border-line"
           style={{
-            padding: `${12 * density}px`,
-            minHeight: `${Math.max(96, Math.min(156, 116 * density))}px`,
+            padding: `${11 * density}px`,
+            minHeight: `${Math.max(84, Math.min(136, 102 * density))}px`,
           }}
         >
           <div className="flex flex-wrap items-start justify-between gap-2">
