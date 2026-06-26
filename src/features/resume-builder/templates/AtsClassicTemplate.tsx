@@ -1,6 +1,7 @@
 import type { ReactNode } from 'react'
 import type { ResumeSectionId } from '../types/resume'
 import type { ResumeTemplateProps } from '../types/template'
+import { getVisibleCustomSections, getVisibleSectionOrder } from '../lib/sections'
 
 const linesFromText = (text: string) =>
   text
@@ -9,7 +10,9 @@ const linesFromText = (text: string) =>
     .filter(Boolean)
 
 export const AtsClassicTemplate = ({ data }: ResumeTemplateProps) => {
-  const { basic, experiences, projects, education, skills, sectionOrder } = data
+  const { basic, experiences, projects, education, skills } = data
+  const visibleCustomSections = getVisibleCustomSections(data)
+  const visibleSectionOrder = getVisibleSectionOrder(data)
 
   const sectionRenderer: Record<ResumeSectionId, ReactNode> = {
     experience: (
@@ -137,20 +140,20 @@ export const AtsClassicTemplate = ({ data }: ResumeTemplateProps) => {
         <p className="mt-2 text-sm leading-6">{basic.summary}</p>
       </section>
 
-      {sectionOrder.map((id) => (
+      {visibleSectionOrder.map((id) => (
         <div key={id}>{sectionRenderer[id]}</div>
       ))}
 
-      {data.custom.enabled ? (
-        <section className="pdf-page-block mt-5">
+      {visibleCustomSections.map((section) => (
+        <section key={section.id} className="pdf-page-block mt-5">
           <h2 className="border-b border-neutral-400 pb-1 text-sm font-bold uppercase tracking-wider">
-            {data.custom.title}
+            {section.title}
           </h2>
           <p className="mt-2 whitespace-pre-line text-sm leading-6">
-            {data.custom.content || '请填写自定义模块内容。'}
+            {section.content || '请填写自定义模块内容。'}
           </p>
         </section>
-      ) : null}
+      ))}
     </article>
   )
 }

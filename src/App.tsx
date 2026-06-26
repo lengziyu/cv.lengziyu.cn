@@ -61,12 +61,6 @@ function App() {
   }, [totalPages])
 
   useEffect(() => {
-    if (activeStep === 'custom' && !data.custom.enabled) {
-      setActiveStep('basic')
-    }
-  }, [activeStep, data.custom.enabled])
-
-  useEffect(() => {
     setIsInsightVisible(previewInsight.status !== 'fit')
   }, [insightSignature, previewInsight.status])
 
@@ -210,17 +204,10 @@ function App() {
               <ResumeStepSidebar
                 activeStep={activeStep}
                 sectionOrder={data.sectionOrder}
+                hiddenSections={data.hiddenSections}
                 sectionTitles={data.sectionTitles}
-                customEnabled={data.custom.enabled}
-                customTitle={data.custom.title}
                 onStepChange={(step) => setActiveStep(step)}
                 onSectionMove={actions.moveSection}
-                onCustomToggle={(enabled) => {
-                  actions.toggleCustomSection(enabled)
-                  if (enabled) {
-                    setActiveStep('custom')
-                  }
-                }}
               />
             }
             center={<ResumeEditorPanel activeStep={activeStep} data={data} actions={actions} />}

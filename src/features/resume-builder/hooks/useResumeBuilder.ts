@@ -150,22 +150,39 @@ export const useResumeBuilder = () => {
             resumeReducer(current, { type: 'section/move', sourceId, targetId }),
           ),
         ),
-      toggleCustomSection: (enabled) =>
+      setSectionVisible: (sectionId, visible) =>
         setWorkspace((prev) =>
           withUpdatedActiveVersion(prev, (current) =>
-            resumeReducer(current, { type: 'custom/toggle', enabled }),
+            resumeReducer(current, { type: 'section/visibility-set', sectionId, visible }),
           ),
         ),
-      updateCustomTitle: (title) =>
+      addCustomSection: () =>
         setWorkspace((prev) =>
           withUpdatedActiveVersion(prev, (current) =>
-            resumeReducer(current, { type: 'custom/title-set', title }),
+            resumeReducer(current, { type: 'custom/add' }),
           ),
         ),
-      updateCustomContent: (content) =>
+      removeCustomSection: (id) =>
         setWorkspace((prev) =>
           withUpdatedActiveVersion(prev, (current) =>
-            resumeReducer(current, { type: 'custom/content-set', content }),
+            resumeReducer(current, { type: 'custom/remove', id }),
+          ),
+        ),
+      toggleCustomSection: (id, enabled) =>
+        setWorkspace((prev) =>
+          withUpdatedActiveVersion(prev, (current) =>
+            resumeReducer(current, { type: 'custom/toggle', id, enabled }),
+          ),
+        ),
+      updateCustomSectionField: (id, field, value) =>
+        setWorkspace((prev) =>
+          withUpdatedActiveVersion(prev, (current) =>
+            resumeReducer(current, {
+              type: 'custom/update-field',
+              id,
+              field,
+              value,
+            }),
           ),
         ),
       replaceData: (nextData) =>

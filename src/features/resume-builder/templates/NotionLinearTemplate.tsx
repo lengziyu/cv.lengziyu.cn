@@ -7,6 +7,7 @@ import type {
 } from '../types/resume'
 import type { ReactNode } from 'react'
 import type { ResumeTemplateProps } from '../types/template'
+import { getVisibleCustomSections, getVisibleSectionOrder } from '../lib/sections'
 
 const ContactPill = ({ text }: { text: string }) => (
   <span className="pdf-pill pdf-pill-contact rounded-full border border-line">
@@ -239,8 +240,10 @@ const CustomSection = ({
 )
 
 export const NotionLinearTemplate = ({ data, density = 1 }: ResumeTemplateProps) => {
-  const { basic, experiences, projects, education, skills, sectionOrder } = data
+  const { basic, experiences, projects, education, skills } = data
   const d = Math.max(0.9, Math.min(1.14, density))
+  const visibleCustomSections = getVisibleCustomSections(data)
+  const visibleSectionOrder = getVisibleSectionOrder(data)
 
   const sectionRenderer: Record<ResumeSectionId, ReactNode> = {
     experience: (
@@ -299,13 +302,18 @@ export const NotionLinearTemplate = ({ data, density = 1 }: ResumeTemplateProps)
         </div>
       </header>
 
-      {sectionOrder.map((id) => (
+      {visibleSectionOrder.map((id) => (
         <div key={id}>{sectionRenderer[id]}</div>
       ))}
 
-      {data.custom.enabled ? (
-        <CustomSection title={data.custom.title} content={data.custom.content} density={d} />
-      ) : null}
+      {visibleCustomSections.map((section) => (
+        <CustomSection
+          key={section.id}
+          title={section.title}
+          content={section.content}
+          density={d}
+        />
+      ))}
     </article>
   )
 }

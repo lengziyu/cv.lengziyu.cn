@@ -1,12 +1,15 @@
 import {
+  createEmptyCustomSection,
   createEmptyEducation,
   createEmptyExperience,
   createEmptyProject,
 } from '../constants/resume'
 import type {
   BasicInfo,
+  CustomSection,
   EducationItem,
   ExperienceItem,
+  HideableResumeSectionId,
   ProjectItem,
   ResumeData,
   ResumeSectionId,
@@ -15,6 +18,7 @@ import type {
 type ExperienceField = keyof Omit<ExperienceItem, 'id'>
 type EducationField = keyof Omit<EducationItem, 'id'>
 type ProjectField = keyof Omit<ProjectItem, 'id'>
+type CustomSectionField = keyof Omit<CustomSection, 'id' | 'enabled'>
 
 export type ResumeAction =
   | { type: 'basic/update-field'; field: keyof BasicInfo; value: string }
@@ -54,9 +58,20 @@ export type ResumeAction =
       sourceId: ResumeSectionId
       targetId: ResumeSectionId
     }
-  | { type: 'custom/toggle'; enabled: boolean }
-  | { type: 'custom/title-set'; title: string }
-  | { type: 'custom/content-set'; content: string }
+  | {
+      type: 'section/visibility-set'
+      sectionId: HideableResumeSectionId
+      visible: boolean
+    }
+  | { type: 'custom/add' }
+  | { type: 'custom/remove'; id: string }
+  | { type: 'custom/toggle'; id: string; enabled: boolean }
+  | {
+      type: 'custom/update-field'
+      id: string
+      field: CustomSectionField
+      value: string
+    }
   | { type: 'data/replace'; data: ResumeData }
 
 export const resumeReducer = (
@@ -186,31 +201,48 @@ export const resumeReducer = (
       }
     }
 
+    case 'section/visibility-set': {
+      const hiddenSections = action.visible
+        ? state.hiddenSections.filter((id) => id !== action.sectionId)
+        : [...new Set([...state.hiddenSections, action.sectionId])]
+
+      return {
+        ...state,
+        hiddenSections,
+      }
+    }
+
+    case 'custom/add':
+      return {
+        ...state,
+        customSections: [...state.customSections, createEmptyCustomSection()],
+      }
+
     case 'custom/toggle':
       return {
         ...state,
-        custom: {
-          ...state.custom,
-          enabled: action.enabled,
-        },
+        customSections: state.customSections.map((item) =>
+          item.id === action.id ? { ...item, enabled: action.enabled } : item,
+        ),
       }
 
-    case 'custom/title-set':
+    case 'custom/remove':
       return {
         ...state,
-        custom: {
-          ...state.custom,
-          title: action.title,
-        },
+        customSections: state.customSections.filter((item) => item.id !== action.id),
       }
 
-    case 'custom/content-set':
+    case 'custom/update-field':
       return {
         ...state,
-        custom: {
-          ...state.custom,
-          content: action.content,
-        },
+        customSections: state.customSections.map((item) =>
+          item.id === action.id
+            ? {
+                ...item,
+                [action.field]: action.value,
+              }
+            : item,
+        ),
       }
 
     case 'data/replace':

@@ -13,6 +13,7 @@ import type {
   ResumeData,
   ResumeSectionId,
 } from '../types/resume'
+import { getVisibleCustomSections, getVisibleSectionOrder } from './sections'
 
 const ACCENT = '2563eb'
 const ACCENT_DARK = '1e3a8a'
@@ -42,6 +43,8 @@ const downloadBlob = (blob: Blob, fileName: string) => {
 }
 
 export const exportResumeWord = async (data: ResumeData, fileName: string) => {
+  const visibleCustomSections = getVisibleCustomSections(data)
+  const visibleSectionOrder = getVisibleSectionOrder(data)
   const {
     AlignmentType,
     BorderStyle,
@@ -336,11 +339,6 @@ export const exportResumeWord = async (data: ResumeData, fileName: string) => {
       ? [card([chipParagraph(data.skills)]), spacer(80)]
       : []
 
-  const customSection = () =>
-    data.custom.enabled && hasText(data.custom.content)
-      ? [card(bulletParagraphs(data.custom.content)), spacer(80)]
-      : []
-
   const sectionContent: Record<ResumeSectionId, () => FileChild[]> = {
     experience: experienceSection,
     project: projectSection,
@@ -430,16 +428,21 @@ export const exportResumeWord = async (data: ResumeData, fileName: string) => {
     )
   }
 
-  for (const sectionId of data.sectionOrder) {
+  for (const sectionId of visibleSectionOrder) {
     const content = sectionContent[sectionId]()
     if (!content.length) continue
 
     children.push(sectionTitle(data.sectionTitles[sectionId]), ...content)
   }
 
-  const customContent = customSection()
-  if (customContent.length) {
-    children.push(sectionTitle(data.custom.title || '自定义模块'), ...customContent)
+  for (const customSection of visibleCustomSections) {
+    if (!hasText(customSection.content)) continue
+
+    children.push(
+      sectionTitle(customSection.title || '自定义模块'),
+      card(bulletParagraphs(customSection.content)),
+      spacer(80),
+    )
   }
 
   const doc = new Document({

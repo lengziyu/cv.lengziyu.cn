@@ -1,4 +1,9 @@
-import type { ResumeData, ResumeSectionId, ResumeVersion } from './resume'
+import type {
+  HideableResumeSectionId,
+  ResumeData,
+  ResumeSectionId,
+  ResumeVersion,
+} from './resume'
 
 export interface ResumeActions {
   updateBasicField: (
@@ -45,9 +50,15 @@ export interface ResumeActions {
   setTemplate: (templateId: string) => void
   updateSectionTitle: (sectionId: ResumeSectionId, title: string) => void
   moveSection: (sourceId: ResumeSectionId, targetId: ResumeSectionId) => void
-  toggleCustomSection: (enabled: boolean) => void
-  updateCustomTitle: (title: string) => void
-  updateCustomContent: (content: string) => void
+  setSectionVisible: (sectionId: HideableResumeSectionId, visible: boolean) => void
+  addCustomSection: () => void
+  removeCustomSection: (id: string) => void
+  toggleCustomSection: (id: string, enabled: boolean) => void
+  updateCustomSectionField: (
+    id: string,
+    field: 'title' | 'content',
+    value: string,
+  ) => void
   replaceData: (data: ResumeData) => void
 }
 

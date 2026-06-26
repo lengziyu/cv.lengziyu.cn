@@ -2,6 +2,7 @@ import { useMemo, useState } from 'react'
 import { Card } from '../../../components/ui/Card'
 import { STEP_ITEMS } from '../constants/resume'
 import type {
+  HideableResumeSectionId,
   ResumeSectionId,
   ResumeSectionTitles,
   ResumeStepId,
@@ -11,12 +12,10 @@ import { cn } from '../../../shared/cn'
 interface ResumeStepSidebarProps {
   activeStep: ResumeStepId
   sectionOrder: ResumeSectionId[]
+  hiddenSections: HideableResumeSectionId[]
   sectionTitles: ResumeSectionTitles
-  customEnabled: boolean
-  customTitle: string
   onStepChange: (step: ResumeStepId) => void
   onSectionMove: (sourceId: ResumeSectionId, targetId: ResumeSectionId) => void
-  onCustomToggle: (enabled: boolean) => void
 }
 
 const itemBaseClass =
@@ -49,12 +48,10 @@ const DragHandleIcon = ({ selected }: { selected: boolean }) => (
 export const ResumeStepSidebar = ({
   activeStep,
   sectionOrder,
+  hiddenSections,
   sectionTitles,
-  customEnabled,
-  customTitle,
   onStepChange,
   onSectionMove,
-  onCustomToggle,
 }: ResumeStepSidebarProps) => {
   const [draggingId, setDraggingId] = useState<ResumeSectionId | null>(null)
 
@@ -67,9 +64,7 @@ export const ResumeStepSidebar = ({
     [],
   )
 
-  const orderedSteps: ResumeStepId[] = customEnabled
-    ? ['basic', ...sectionOrder, 'custom']
-    : ['basic', ...sectionOrder]
+  const orderedSteps: ResumeStepId[] = ['basic', ...sectionOrder, 'custom']
 
   return (
     <aside>
@@ -92,8 +87,12 @@ export const ResumeStepSidebar = ({
               stepId === 'basic'
                 ? item.title
                 : stepId === 'custom'
-                  ? customTitle || item.title
+                  ? item.title
                   : sectionTitles[stepId]
+            const isHidden =
+              stepId === 'education' || stepId === 'skills'
+                ? hiddenSections.includes(stepId)
+                : false
 
             return (
               <button
@@ -139,6 +138,16 @@ export const ResumeStepSidebar = ({
                   Step {index + 1}
                 </p>
                 <p className="mt-1 text-sm font-semibold">{displayTitle}</p>
+                {isHidden ? (
+                  <p
+                    className={cn(
+                      'mt-1 text-xs font-medium',
+                      selected ? 'text-white/70' : 'text-rose-500',
+                    )}
+                  >
+                    已隐藏
+                  </p>
+                ) : null}
                 <p
                   className={cn(
                     'mt-1 text-xs leading-5',
@@ -150,18 +159,6 @@ export const ResumeStepSidebar = ({
               </button>
             )
           })}
-        </div>
-
-        <div className="mt-auto border-t border-line pt-3">
-          <label className="flex items-center justify-end gap-2 text-xs font-medium text-slate">
-            <span>显示自定义模块</span>
-            <input
-              type="checkbox"
-              checked={customEnabled}
-              onChange={(event) => onCustomToggle(event.target.checked)}
-              className="h-4 w-4 rounded border-line text-ink focus:ring-slate-300"
-            />
-          </label>
         </div>
       </Card>
     </aside>

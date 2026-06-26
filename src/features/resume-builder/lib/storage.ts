@@ -2,13 +2,16 @@ import {
   DEFAULT_RESUME_DATA,
   DEFAULT_SECTION_ORDER,
   DEFAULT_SECTION_TITLES,
+  HIDEABLE_SECTION_IDS,
   RESUME_STORAGE_KEY,
   RESUME_WORKSPACE_STORAGE_KEY,
 } from '../constants/resume'
 import { createId } from '../../../shared/createId'
 import type {
+  CustomSection,
   EducationItem,
   ExperienceItem,
+  HideableResumeSectionId,
   ProjectItem,
   ResumeData,
   ResumeSectionId,
@@ -46,6 +49,36 @@ const normalizeProject = (item: Partial<ProjectItem>): ProjectItem => ({
   description: item.description || '',
 })
 
+const normalizeCustomSection = (item: Partial<CustomSection>): CustomSection => ({
+  id: item.id || createId(),
+  enabled: item.enabled ?? true,
+  title: item.title || '自定义模块',
+  content: item.content || '',
+})
+
+const normalizeCustomSections = (
+  raw?: Partial<ResumeData> & {
+    custom?: Partial<Omit<CustomSection, 'id'>>
+  },
+): CustomSection[] => {
+  if (raw?.customSections?.length) {
+    return raw.customSections.map((item) => normalizeCustomSection(item))
+  }
+
+  if (raw?.custom && (raw.custom.enabled || raw.custom.title || raw.custom.content)) {
+    return [
+      normalizeCustomSection({
+        id: createId(),
+        enabled: raw.custom.enabled ?? true,
+        title: raw.custom.title || '自定义模块',
+        content: raw.custom.content || '',
+      }),
+    ]
+  }
+
+  return DEFAULT_RESUME_DATA.customSections.map((item) => normalizeCustomSection(item))
+}
+
 const normalizeSectionOrder = (order?: string[]): ResumeSectionId[] => {
   if (!order?.length) {
     return [...DEFAULT_SECTION_ORDER]
@@ -67,6 +100,13 @@ const normalizeSectionTitles = (
   skills: titles?.skills || DEFAULT_SECTION_TITLES.skills,
 })
 
+const normalizeHiddenSections = (sections?: string[]): HideableResumeSectionId[] =>
+  sections?.length
+    ? sections.filter((item): item is HideableResumeSectionId =>
+        HIDEABLE_SECTION_IDS.includes(item as HideableResumeSectionId),
+      )
+    : []
+
 export const normalizeResumeData = (raw?: Partial<ResumeData>): ResumeData => ({
   templateId: raw?.templateId || DEFAULT_RESUME_DATA.templateId,
   basic: {
@@ -80,6 +120,7 @@ export const normalizeResumeData = (raw?: Partial<ResumeData>): ResumeData => ({
     avatar: raw?.basic?.avatar || '',
   },
   sectionOrder: normalizeSectionOrder(raw?.sectionOrder),
+  hiddenSections: normalizeHiddenSections(raw?.hiddenSections),
   sectionTitles: normalizeSectionTitles(raw?.sectionTitles),
   experiences:
     raw?.experiences?.length
@@ -94,11 +135,7 @@ export const normalizeResumeData = (raw?: Partial<ResumeData>): ResumeData => ({
       ? raw.education.map((item) => normalizeEducation(item))
       : DEFAULT_RESUME_DATA.education.map((item) => normalizeEducation(item)),
   skills: raw?.skills?.length ? raw.skills.filter(Boolean) : [...DEFAULT_RESUME_DATA.skills],
-  custom: {
-    enabled: raw?.custom?.enabled ?? DEFAULT_RESUME_DATA.custom.enabled,
-    title: raw?.custom?.title || DEFAULT_RESUME_DATA.custom.title,
-    content: raw?.custom?.content || DEFAULT_RESUME_DATA.custom.content,
-  },
+  customSections: normalizeCustomSections(raw),
 })
 
 const normalizeResumeVersion = (raw?: Partial<ResumeVersion>, fallbackName = '默认简历'): ResumeVersion => ({

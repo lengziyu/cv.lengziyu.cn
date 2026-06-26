@@ -2,7 +2,9 @@ import { createId } from '../../../shared/createId'
 import type {
   EducationItem,
   ExperienceItem,
+  HideableResumeSectionId,
   ProjectItem,
+  CustomSection,
   ResumeData,
   ResumeSectionId,
   ResumeSectionTitles,
@@ -41,6 +43,13 @@ export const createEmptyProject = (): ProjectItem => ({
   description: '',
 })
 
+export const createEmptyCustomSection = (): CustomSection => ({
+  id: createId(),
+  enabled: true,
+  title: '自定义模块',
+  content: '',
+})
+
 export const STEP_ITEMS: StepItem[] = [
   { id: 'basic', title: '基础信息', description: '姓名、联系方式、头像' },
   { id: 'experience', title: '工作经历', description: '多段工作经历' },
@@ -64,6 +73,8 @@ export const DEFAULT_SECTION_TITLES: ResumeSectionTitles = {
   skills: '技能清单',
 }
 
+export const HIDEABLE_SECTION_IDS: HideableResumeSectionId[] = ['education', 'skills']
+
 export const DEFAULT_RESUME_DATA: ResumeData = {
   templateId: 'notion-linear',
   basic: {
@@ -78,6 +89,7 @@ export const DEFAULT_RESUME_DATA: ResumeData = {
     avatar: '',
   },
   sectionOrder: [...DEFAULT_SECTION_ORDER],
+  hiddenSections: [],
   sectionTitles: { ...DEFAULT_SECTION_TITLES },
   experiences: [
     {
@@ -114,9 +126,5 @@ export const DEFAULT_RESUME_DATA: ResumeData = {
     },
   ],
   skills: ['React', 'TypeScript', 'Tailwind CSS', 'Node.js', 'Vite'],
-  custom: {
-    enabled: false,
-    title: '自定义模块',
-    content: '',
-  },
+  customSections: [],
 }

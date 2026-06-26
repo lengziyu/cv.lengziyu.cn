@@ -4,6 +4,8 @@ export type ResumeStepId = 'basic' | ResumeSectionId | 'custom'
 
 export type ResumeSectionTitles = Record<ResumeSectionId, string>
 
+export type HideableResumeSectionId = 'education' | 'skills'
+
 export interface BasicInfo {
   fullName: string
   role: string
@@ -45,6 +47,7 @@ export interface ProjectItem {
 }
 
 export interface CustomSection {
+  id: string
   enabled: boolean
   title: string
   content: string
@@ -54,12 +57,13 @@ export interface ResumeData {
   templateId: string
   basic: BasicInfo
   sectionOrder: ResumeSectionId[]
+  hiddenSections: HideableResumeSectionId[]
   sectionTitles: ResumeSectionTitles
   experiences: ExperienceItem[]
   projects: ProjectItem[]
   education: EducationItem[]
   skills: string[]
-  custom: CustomSection
+  customSections: CustomSection[]
 }
 
 export interface ResumeVersion {

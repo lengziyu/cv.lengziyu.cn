@@ -21,6 +21,19 @@ export const EducationSection = ({ data, actions }: EducationSectionProps) => (
       onTitleChange={(title) => actions.updateSectionTitle('education', title)}
     />
 
+    <Card className="flex items-center justify-between gap-3">
+      <div>
+        <p className="text-sm font-semibold text-ink">在简历中显示教育经历</p>
+        <p className="mt-1 text-xs text-slate">关闭后仍可编辑内容，但预览和导出会隐藏该模块。</p>
+      </div>
+      <input
+        type="checkbox"
+        checked={!data.hiddenSections.includes('education')}
+        onChange={(event) => actions.setSectionVisible('education', event.target.checked)}
+        className="h-4 w-4 rounded border-line text-ink focus:ring-slate-300"
+      />
+    </Card>
+
     {data.education.map((item, index) => (
       <Card key={item.id}>
         <div className="mb-4 flex items-center justify-between gap-3">

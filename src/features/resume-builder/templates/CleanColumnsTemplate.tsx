@@ -1,9 +1,12 @@
 import type { ReactNode } from 'react'
 import type { ResumeSectionId } from '../types/resume'
 import type { ResumeTemplateProps } from '../types/template'
+import { getVisibleCustomSections, getVisibleSectionOrder } from '../lib/sections'
 
 export const CleanColumnsTemplate = ({ data }: ResumeTemplateProps) => {
-  const { basic, experiences, projects, education, skills, sectionOrder } = data
+  const { basic, experiences, projects, education, skills } = data
+  const visibleCustomSections = getVisibleCustomSections(data)
+  const visibleSectionOrder = getVisibleSectionOrder(data)
 
   const sectionRenderer: Record<ResumeSectionId, ReactNode> = {
     experience: (
@@ -105,22 +108,22 @@ export const CleanColumnsTemplate = ({ data }: ResumeTemplateProps) => {
       </header>
 
       <div className="mt-6 space-y-6">
-        {sectionOrder.map((id) => (
+        {visibleSectionOrder.map((id) => (
           <div key={id}>{sectionRenderer[id]}</div>
         ))}
 
-        {data.custom.enabled ? (
-          <section className="pdf-page-block">
+        {visibleCustomSections.map((section) => (
+          <section key={section.id} className="pdf-page-block">
             <h2 className="text-sm font-semibold uppercase tracking-wider text-sky-700">
-              {data.custom.title}
+              {section.title}
             </h2>
             <div className="mt-3 rounded-lg border border-sky-100 p-3">
               <p className="whitespace-pre-line text-sm leading-6 text-slate-700">
-                {data.custom.content || '请填写自定义模块内容。'}
+                {section.content || '请填写自定义模块内容。'}
               </p>
             </div>
           </section>
-        ) : null}
+        ))}
       </div>
     </article>
   )

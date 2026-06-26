@@ -1,6 +1,7 @@
 import type { ReactNode } from 'react'
 import type { ResumeSectionId } from '../types/resume'
 import type { ResumeTemplateProps } from '../types/template'
+import { getVisibleCustomSections, getVisibleSectionOrder } from '../lib/sections'
 
 const toList = (text: string) =>
   text
@@ -15,8 +16,10 @@ const SectionTitle = ({ children }: { children: ReactNode }) => (
 )
 
 export const ModernSlateTemplate = ({ data, density = 1 }: ResumeTemplateProps) => {
-  const { basic, experiences, projects, education, skills, sectionOrder } = data
+  const { basic, experiences, projects, education, skills } = data
   const d = Math.max(0.9, Math.min(1.14, density))
+  const visibleCustomSections = getVisibleCustomSections(data)
+  const visibleSectionOrder = getVisibleSectionOrder(data)
 
   const sections: Record<ResumeSectionId, ReactNode> = {
     experience: (
@@ -132,23 +135,24 @@ export const ModernSlateTemplate = ({ data, density = 1 }: ResumeTemplateProps) 
         </p>
       </header>
 
-      {sectionOrder.map((id) => (
+      {visibleSectionOrder.map((id) => (
         <div key={id}>{sections[id]}</div>
       ))}
 
-      {data.custom.enabled ? (
+      {visibleCustomSections.map((section) => (
         <section
+          key={section.id}
           className="pdf-page-block rounded-xl border border-slate-200/80 bg-white"
           style={{ marginTop: `${20 * d}px`, padding: `${14 * d}px` }}
         >
-          <SectionTitle>{data.custom.title}</SectionTitle>
+          <SectionTitle>{section.title}</SectionTitle>
           <div className="mt-3 rounded-lg bg-slate-50/70 p-3">
             <p className="whitespace-pre-line text-sm leading-7 text-slate-700">
-              {data.custom.content || '请填写自定义模块内容。'}
+              {section.content || '请填写自定义模块内容。'}
             </p>
           </div>
         </section>
-      ) : null}
+      ))}
     </article>
   )
 }

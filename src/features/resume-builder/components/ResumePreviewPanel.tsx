@@ -2,6 +2,7 @@ import { useEffect, useRef } from 'react'
 import type { RefObject } from 'react'
 import type { ResumeData } from '../types/resume'
 import { defaultTemplateId, templateRegistry } from '../templates/templateRegistry'
+import { getVisibleCustomSections } from '../lib/sections'
 
 const PREVIEW_PAGE_HEIGHT = 1122
 const TIGHT_FREE_SPACE_THRESHOLD = 24 * 3
@@ -153,7 +154,11 @@ export const ResumePreviewPanel = ({
       if (movedLabels.some((label) => label.includes('教育'))) {
         suggestions.push('教育经历可只保留学校、专业和一行补充说明。')
       }
-      if (data.custom.enabled && movedLabels.some((label) => label === data.custom.title)) {
+      if (
+        getVisibleCustomSections(data).some((section) =>
+          movedLabels.some((label) => label === section.title),
+        )
+      ) {
         suggestions.push('自定义模块可以先压缩到 1 到 2 段核心内容。')
       }
 

@@ -19,6 +19,18 @@ export const SkillsSection = ({ data, actions }: SkillsSectionProps) => {
         description="用逗号分隔多个技能，会自动渲染成标签。"
         onTitleChange={(title) => actions.updateSectionTitle('skills', title)}
       />
+      <Card className="flex items-center justify-between gap-3">
+        <div>
+          <p className="text-sm font-semibold text-ink">在简历中显示技能清单</p>
+          <p className="mt-1 text-xs text-slate">关闭后仍可编辑技能，但预览和导出会隐藏该模块。</p>
+        </div>
+        <input
+          type="checkbox"
+          checked={!data.hiddenSections.includes('skills')}
+          onChange={(event) => actions.setSectionVisible('skills', event.target.checked)}
+          className="h-4 w-4 rounded border-line text-ink focus:ring-slate-300"
+        />
+      </Card>
       <Card>
         <TextAreaField
           label="技能"
