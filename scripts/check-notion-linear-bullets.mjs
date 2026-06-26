@@ -10,13 +10,13 @@ const templatePath = path.resolve(
 const source = fs.readFileSync(templatePath, 'utf8')
 
 assert(
-  source.includes("className=\"m-0 list-outside list-disc space-y-2 pl-5 marker:text-slate/60\""),
-  'Expected bullet lists to use native outside disc markers.',
+  source.includes("className=\"space-y-2\""),
+  'Expected multiline descriptions to render as plain stacked paragraphs.',
 )
 
 assert(
-  source.includes("className=\"pl-2 text-sm leading-6 text-slate\""),
-  'Expected list items to keep text spacing on the native marker.',
+  source.includes("className=\"text-sm leading-6 text-slate\""),
+  'Expected multiline description paragraphs to keep the resume body typography.',
 )
 
 assert(
@@ -25,8 +25,18 @@ assert(
 )
 
 assert(
+  !source.includes('list-disc'),
+  'Native bullet list rendering is still present.',
+)
+
+assert(
+  !source.includes('<li'),
+  'List item rendering is still present.',
+)
+
+assert(
   !source.includes('rounded-full bg-slate/60'),
   'Manual bullet dot rendering is still present.',
 )
 
-console.log('bullet layout check passed')
+console.log('plain multiline layout check passed')
