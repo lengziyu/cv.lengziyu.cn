@@ -70,7 +70,7 @@ const ExperienceSection = ({
       {items.map((item) => (
         <div
           key={item.id}
-          data-page-label={item.position || title}
+          data-page-label={item.company || title}
           className="pdf-page-block flex flex-col justify-center rounded-xl border border-line"
           style={{
             padding: `${12 * density}px`,
@@ -79,8 +79,8 @@ const ExperienceSection = ({
         >
           <div className="flex flex-wrap items-start justify-between gap-2">
             <div>
-              <h3 className="text-base font-semibold text-ink">{item.position || '未填写职位'}</h3>
-              <p className="mt-1 text-sm text-slate">{item.company || '未填写公司'}</p>
+              <h3 className="text-base font-semibold text-ink">{item.company || '未填写公司'}</h3>
+              <p className="mt-1 text-sm text-slate">{item.position || '未填写职位'}</p>
             </div>
             <p className="text-xs font-medium uppercase tracking-[0.1em] text-slate">
               {(item.startDate || '开始时间') + ' - ' + (item.endDate || '结束时间')}

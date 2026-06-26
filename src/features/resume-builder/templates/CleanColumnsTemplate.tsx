@@ -19,8 +19,8 @@ export const CleanColumnsTemplate = ({ data }: ResumeTemplateProps) => {
             <div key={item.id} className="pdf-page-block rounded-lg border border-sky-100 p-3">
               <div className="flex items-start justify-between gap-2">
                 <div>
-                  <p className="text-sm font-semibold text-slate-900">{item.position}</p>
-                  <p className="text-sm text-slate-600">{item.company}</p>
+                  <p className="text-sm font-semibold text-slate-900">{item.company}</p>
+                  <p className="text-sm text-slate-600">{item.position}</p>
                 </div>
                 <p className="text-xs text-slate-500">
                   {item.startDate} - {item.endDate}

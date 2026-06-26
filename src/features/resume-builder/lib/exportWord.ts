@@ -272,8 +272,8 @@ export const exportResumeWord = async (data: ResumeData, fileName: string) => {
     data.experiences.flatMap((item: ExperienceItem) => [
       card([
         itemTitle(
-          item.position || item.company,
-          item.company,
+          item.company || item.position,
+          item.position,
           [item.startDate, item.endDate].filter(hasText).join(' - '),
         ),
         ...bulletParagraphs(item.description),

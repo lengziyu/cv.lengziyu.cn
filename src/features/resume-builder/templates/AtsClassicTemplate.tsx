@@ -24,9 +24,10 @@ export const AtsClassicTemplate = ({ data }: ResumeTemplateProps) => {
           {experiences.map((item) => (
             <div key={item.id} className="pdf-page-block">
               <div className="flex flex-wrap items-start justify-between gap-2">
-                <p className="text-sm font-semibold">
-                  {item.position || 'Role'} | {item.company || 'Company'}
-                </p>
+                <div>
+                  <p className="text-sm font-semibold">{item.company || 'Company'}</p>
+                  <p className="mt-1 text-sm text-slate-700">{item.position || 'Role'}</p>
+                </div>
                 <p className="text-xs">
                   {item.startDate || 'Start'} - {item.endDate || 'End'}
                 </p>
