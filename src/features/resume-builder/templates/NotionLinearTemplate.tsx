@@ -46,12 +46,9 @@ const renderLines = (text: string) => {
   return (
     <ul className="m-0 list-none space-y-2 p-0">
       {lines.map((line, index) => (
-        <li
-          key={`${line}-${index}`}
-          className="grid grid-cols-[10px_minmax(0,1fr)] items-start gap-x-3 text-sm leading-6 text-slate"
-        >
-          <span className="mt-2 block h-1.5 w-1.5 rounded-full bg-slate/60" />
-          <span className="min-w-0">{line}</span>
+        <li key={`${line}-${index}`} className="relative pl-5 text-sm leading-6 text-slate">
+          <span className="absolute left-0 top-[0.78em] block h-1.5 w-1.5 -translate-y-1/2 rounded-full bg-slate/60" />
+          <span>{line}</span>
         </li>
       ))}
     </ul>
