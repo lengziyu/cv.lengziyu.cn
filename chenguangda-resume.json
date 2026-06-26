@@ -7,7 +7,7 @@
     "phone": "电话：13621424189",
     "location": "广州",
     "website": "https://zp.lengziyu.cn",
-    "summary": "10 年前端开发经验，熟悉 Vue 2/3、React Native、uni-app 及前端工程化体系，具备 Web、跨端 App、小程序、后台系统与 AI 应用接入的完整交付经验。能够独立推进产品从需求分析、UI 还原、前后端实现到部署上线与持续迭代，长期使用 Codex、AI Coding 等方式辅助需求拆解、代码实现与问题修复。熟悉 GitHub Actions、Docker、自动化部署、多环境配置等工程化流程，当前关注 AI 应用落地、跨端产品与开发效率优化方向。",
+    "summary": "10 年前端开发经验，负责过 Web、跨端 App、小程序、后台系统与 AI 应用接入，熟悉 Vue 2/3、React Native、uni-app 及前端工程化体系。能够独立推进需求分析、UI 还原、前后端实现、部署上线与持续迭代，长期使用 Codex、AI Coding 提升交付效率。熟悉 GitHub Actions、Docker、多环境配置与自动化部署，当前关注 AI 应用落地、跨端产品与开发效率优化方向。",
     "avatar": ""
   },
   "sectionOrder": [
@@ -33,7 +33,7 @@
       "position": "高级前端开发工程师",
       "startDate": "2023.03",
       "endDate": "至今",
-      "description": "负责公司多个数字化与 AI 相关项目的前端开发与落地，涵盖企业 ERP Web 端、移动端 OA App、智慧工地管理平台及 AI 应用接入等方向；\n围绕组织架构、人事考勤、流程审批、消息推送、视频监控、AI 告警、隐患识别、数据看板等业务场景持续推进功能迭代、页面交互优化与通用能力建设；\n配合产品、后端与业务团队完成需求分析、方案落地、接口联调、问题修复与版本发布，并在组件封装、导入导出、打印、消息接入等方面提升系统复用性与维护效率。"
+      "description": "负责公司多个数字化与 AI 相关项目的前端开发与落地，涵盖企业 ERP Web 端、移动端 OA App、智慧工地管理平台及 AI 应用接入等方向；\n围绕流程审批、消息推送、视频监控、AI 告警、隐患识别、数据看板等场景持续推进功能迭代与通用能力建设；\n配合产品、后端与业务团队完成需求分析、接口联调、问题修复与版本发布，持续提升系统复用性与维护效率。"
     },
     {
       "id": "chenguangda-experience-2",
@@ -41,7 +41,7 @@
       "position": "高级前端开发工程师",
       "startDate": "2021.09",
       "endDate": "2023.01",
-      "description": "负责患者端小程序的重构与持续优化，重点推进云信音视频、IM 聊天、基因检测、药单支付等核心模块的开发与重构，并完成腾讯与云信音视频能力接入；\n参与项目埋点建设、产线问题排查与修复，编写并实施小程序优化方案，持续改进页面性能、稳定性与用户体验；\n在团队内部开发和维护多项工程化工具与基础能力，包括脚手架 zy-clis、性能监控 zy-perfume、小程序 CDN 引入方案 zy-wxscript、内部组件库 zy-view【部分】及工具集合 zy-tools。"
+      "description": "负责患者端小程序重构与持续优化，重点推进云信音视频、IM 聊天、基因检测、药单支付等核心模块开发，并完成腾讯与云信音视频能力接入；\n参与项目埋点、产线问题排查与修复，编写并实施优化方案，持续改进页面性能、稳定性与用户体验；\n同时维护脚手架、性能监控、小程序 CDN 引入方案、内部组件库及工具集合等工程化基础能力。"
     },
     {
       "id": "chenguangda-experience-3",
@@ -73,41 +73,41 @@
       "id": "chenguangda-project-5",
       "name": "AI 应用接入与业务落地",
       "role": "鲁班科技（主要负责人）",
-      "techStack": "Dify, Prompt Engineering, LLM 应用, Workflow, Knowledge Base",
+      "techStack": "Dify, Workflow, Prompt, Knowledge Base",
       "startDate": "",
       "endDate": "",
       "link": "",
-      "description": "负责公司 AI 相关应用的接入与业务落地，围绕 AI 审方案、AI 安全日志、AI 隐患识别、AI 助手等场景推进需求分析、页面交互、结果展示与业务流程对接；\n参与 Dify 等 AI 应用平台的学习与实践，了解工作流编排、知识库、提示词配置、模型接入等能力，并结合公司业务探索可落地方案；\n配合产品与业务团队推进 AI 功能验证和持续迭代，积累了对 AI 应用接入、场景设计与用户体验优化的实践经验。"
+      "description": "负责 AI 审方案、AI 安全日志、AI 隐患识别、AI 助手等场景的接入与业务落地，推进页面交互、结果展示与流程对接；\n参与 Dify 等平台的学习与实践，结合工作流、知识库、提示词配置等能力探索可落地方案；\n配合产品与业务团队持续推进 AI 功能验证和迭代优化。"
     },
     {
       "id": "chenguangda-project-1",
       "name": "Web端 ERP 管理系统",
       "role": "鲁班科技（主要负责人）",
-      "techStack": "Vue 3, TypeScript, Vite, Pinia, Element Plus",
+      "techStack": "Vue 3, TypeScript, Vite, Element Plus",
       "startDate": "",
       "endDate": "",
       "link": "",
-      "description": "负责企业 ERP Web 端的功能开发与通用能力建设，覆盖组织架构、人事考勤、流程审批、公告通知、车辆管理、数据工厂、统计报表等模块；\n参与通用列表/表单组件封装、弹窗模板统一、部门/岗位选择组件重构、导入导出与打印能力完善、流程节点与审批相关功能开发；\n配合 Monorepo 方式维护 vform、go-view 等子模块，提升了系统的复用性与维护效率。"
+      "description": "负责企业 ERP Web 端功能开发与通用能力建设，覆盖组织架构、人事考勤、流程审批、车辆管理、数据工厂、统计报表等模块；\n参与通用列表/表单组件封装、弹窗模板统一、导入导出与打印能力完善、流程节点与审批相关功能开发；\n配合 Monorepo 方式维护 vform、go-view 等子模块，提升系统复用性与维护效率。"
     },
     {
       "id": "chenguangda-project-3",
       "name": "移动端 ERP / OA App",
       "role": "鲁班科技（主要负责人）",
-      "techStack": "React Native, Expo, TypeScript, Redux Toolkit",
+      "techStack": "React Native, Expo, TypeScript, Push",
       "startDate": "",
       "endDate": "",
       "link": "",
-      "description": "负责移动端 ERP/OA App 的业务开发，覆盖消息通知、流程审批、表单编辑、工作交接、车辆管理、企业切换等核心场景，并封装图片/文件上传、拍照、附件处理等移动端通用能力；\n项目中独立负责应用上架工作，完成打包、配置、提审及发布流程；\n同时对接安卓原生极光推送。"
+      "description": "负责移动端 ERP/OA App 的业务开发，覆盖消息通知、流程审批、表单编辑、工作交接、车辆管理、企业切换等核心场景；\n封装图片/文件上传、拍照、附件处理等移动端通用能力，并独立负责应用打包、提审与发布流程；\n同时对接安卓原生极光推送。"
     },
     {
       "id": "chenguangda-project-2",
       "name": "鲁班智慧云平台 / 鲁班智慧云B端",
       "role": "鲁班科技（主要负责人）",
-      "techStack": "Vue 2, Element UI, Vuex, Vue Router, ECharts, MQTT",
+      "techStack": "Vue 2, ECharts, MQTT, BIM",
       "startDate": "",
       "endDate": "",
       "link": "",
-      "description": "负责智慧工地数字化管理平台开发，覆盖数字工地、视频监控、AI 告警、智能检测、劳务管理、物料管理、项目进度、文件管理等核心业务场景；\n基于 Vue 2 技术栈参与平台后台持续迭代，完成通用页面模板、权限路由、设备树与告警联动、可视化看板等功能开发；\n参与 BIM / 三维模型与全景联动展示、MQTT 实时消息接入等复杂场景建设，提升系统复用性、可维护性和交互体验。"
+      "description": "负责智慧工地数字化管理平台开发，覆盖视频监控、AI 告警、智能检测、劳务管理、物料管理、项目进度等核心场景；\n参与平台后台持续迭代，完成通用页面模板、权限路由、设备树与告警联动、可视化看板等功能开发；\n参与 BIM / 三维模型联动展示与 MQTT 实时消息接入等复杂场景建设。"
     },
     {
       "id": "chenguangda-project-6",
@@ -117,7 +117,7 @@
       "startDate": "",
       "endDate": "",
       "link": "",
-      "description": "开发 GitHub Trending 自动抓取与多渠道推送工具，抓取热门仓库后通过 AI 自动翻译摘要并分发到 Telegram、飞书和企业微信；\n基于 GitHub Actions 实现定时执行与自动化运行，支持 OpenAI 兼容代理、多平台配置、消息分段处理及异常日志输出；\n独立完成需求设计、脚本开发、配置管理、自动化部署与线上维护，积累了 AI 工具开发与自动化交付经验。"
+      "description": "开发 GitHub Trending 自动抓取与多渠道推送工具，抓取热门仓库后通过 AI 自动翻译摘要并分发到 Telegram、飞书和企业微信；\n基于 GitHub Actions 实现定时执行与自动化运行，支持 OpenAI 兼容代理、多平台配置与消息分段处理；\n独立完成需求设计、脚本开发、配置管理与线上维护，积累了 AI 工具开发与自动化交付经验。"
     }
   ],
   "education": [
@@ -161,7 +161,7 @@
       "id": "chenguangda-custom-1",
       "enabled": true,
       "title": "求职方向与个人优势",
-      "content": "求职方向：前端开发、全栈开发、AI 应用开发。偏好能够结合工程交付、产品体验与 AI 能力落地的岗位。\n\n具备长期一线前端开发与独立项目交付经验，能够在需求不完全清晰的情况下主动梳理业务目标、拆解技术方案并推进落地。\n\n熟悉使用 Codex、AI Coding 等方式辅助产品原型还原、页面实现、代码生成、问题排查与迭代优化，能够把 AI 能力转化为实际可交付的产品功能。\n\n具备较强工程化意识，能够独立完成 GitHub Actions、Docker、多环境配置、自动化部署与线上维护等工作，兼顾开发效率、工程质量与业务落地。"
+      "content": "求职方向：前端开发、全栈开发、AI 应用开发，偏好能够结合工程交付、产品体验与 AI 能力落地的岗位。\n\n具备独立项目交付经验，能够主动拆解需求并推进落地；熟悉使用 Codex、AI Coding 提升开发效率，能够独立完成 GitHub Actions、Docker、多环境配置、自动化部署与线上维护等工作。"
     }
   ]
 }

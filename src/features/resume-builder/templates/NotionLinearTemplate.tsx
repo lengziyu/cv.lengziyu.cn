@@ -67,14 +67,14 @@ const ExperienceSection = ({
   items: ExperienceItem[]
   density: number
 }) => (
-  <section className="pdf-page-block" style={{ marginTop: `${16 * density}px` }}>
+  <section style={{ marginTop: `${16 * density}px` }}>
     <h2 className="text-xs font-semibold uppercase tracking-[0.12em] text-slate">{title}</h2>
     <div className="mt-3 flex flex-col" style={{ gap: `${10 * density}px` }}>
       {items.map((item) => (
         <div
           key={item.id}
           data-page-label={item.company || title}
-          className="flex flex-col justify-start rounded-xl border border-line"
+          className="pdf-page-block flex flex-col justify-start rounded-xl border border-line"
           style={{
             padding: `${11 * density}px`,
             minHeight: `${Math.max(92, Math.min(148, 108 * density))}px`,
@@ -107,14 +107,14 @@ const ProjectSection = ({
   items: ProjectItem[]
   density: number
 }) => (
-  <section className="pdf-page-block" style={{ marginTop: `${16 * density}px` }}>
+  <section style={{ marginTop: `${16 * density}px` }}>
     <h2 className="text-xs font-semibold uppercase tracking-[0.12em] text-slate">{title}</h2>
     <div className="mt-3 flex flex-col" style={{ gap: `${10 * density}px` }}>
       {items.map((item) => (
         <div
           key={item.id}
           data-page-label={item.name || title}
-          className="flex flex-col justify-start rounded-xl border border-line"
+          className="pdf-page-block flex flex-col justify-start rounded-xl border border-line"
           style={{
             padding: `${11 * density}px`,
             minHeight: `${Math.max(96, Math.min(176, 124 * density))}px`,
@@ -125,9 +125,11 @@ const ProjectSection = ({
               <h3 className="text-base font-semibold text-ink">{item.name || '未填写项目名称'}</h3>
               <p className="mt-1 text-sm text-slate">{item.role || '未填写角色'}</p>
             </div>
-            <p className="text-xs font-medium uppercase tracking-[0.1em] text-slate">
-              {(item.startDate || '开始时间') + ' - ' + (item.endDate || '结束时间')}
-            </p>
+            {item.startDate || item.endDate ? (
+              <p className="text-xs font-medium uppercase tracking-[0.1em] text-slate">
+                {[item.startDate, item.endDate].filter(Boolean).join(' - ')}
+              </p>
+            ) : null}
           </div>
 
           <div className="mt-3 flex flex-wrap gap-2">
@@ -169,14 +171,14 @@ const EducationSection = ({
   items: EducationItem[]
   density: number
 }) => (
-  <section className="pdf-page-block" style={{ marginTop: `${16 * density}px` }}>
+  <section style={{ marginTop: `${16 * density}px` }}>
     <h2 className="text-xs font-semibold uppercase tracking-[0.12em] text-slate">{title}</h2>
     <div className="mt-3 flex flex-col" style={{ gap: `${10 * density}px` }}>
       {items.map((item) => (
         <div
           key={item.id}
           data-page-label={item.school || title}
-          className="flex flex-col justify-start rounded-xl border border-line"
+          className="pdf-page-block flex flex-col justify-start rounded-xl border border-line"
           style={{
             padding: `${11 * density}px`,
             minHeight: `${Math.max(84, Math.min(136, 102 * density))}px`,
@@ -187,9 +189,11 @@ const EducationSection = ({
               <h3 className="text-base font-semibold text-ink">{item.school || '未填写学校'}</h3>
               <p className="mt-1 text-sm text-slate">{item.degree || '未填写专业/学位'}</p>
             </div>
-            <p className="text-xs font-medium uppercase tracking-[0.1em] text-slate">
-              {(item.startDate || '开始时间') + ' - ' + (item.endDate || '结束时间')}
-            </p>
+            {item.startDate || item.endDate ? (
+              <p className="text-xs font-medium uppercase tracking-[0.1em] text-slate">
+                {[item.startDate, item.endDate].filter(Boolean).join(' - ')}
+              </p>
+            ) : null}
           </div>
           <p className="mt-2 text-sm leading-5 text-slate">
             {item.description || '请补充课程、项目或荣誉信息。'}
