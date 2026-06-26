@@ -44,11 +44,10 @@ const renderLines = (text: string) => {
   }
 
   return (
-    <ul className="m-0 list-none space-y-2 p-0">
+    <ul className="m-0 list-outside list-disc space-y-2 pl-5 marker:text-slate/60">
       {lines.map((line, index) => (
-        <li key={`${line}-${index}`} className="relative pl-5 text-sm leading-6 text-slate">
-          <span className="absolute left-0 top-[0.78em] block h-1.5 w-1.5 -translate-y-1/2 rounded-full bg-slate/60" />
-          <span>{line}</span>
+        <li key={`${line}-${index}`} className="pl-2 text-sm leading-6 text-slate">
+          {line}
         </li>
       ))}
     </ul>
